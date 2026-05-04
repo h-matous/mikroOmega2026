@@ -1,3 +1,5 @@
+package game;
+
 public class Vector2i {
     private int x;
     private int y;
@@ -26,5 +28,22 @@ public class Vector2i {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public void offsetX(int amount) {
+        x = x + amount;
+    }
+
+    public void offsetY(int amount) {
+        y = y + amount;
+    }
+
+    public void offset(int amountX, int amountY) {
+        offsetX(amountX);
+        offsetY(amountY);
+    }
+
+    public void offset(Vector2i amount) {
+        offset(amount.getX(), amount.getY());
     }
 }

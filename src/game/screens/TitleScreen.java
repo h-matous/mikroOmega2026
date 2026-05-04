@@ -1,3 +1,8 @@
+package game.screens;
+
+import game.Game;
+import game.VisibilityController;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -5,12 +10,12 @@ import java.awt.*;
 public class TitleScreen extends JFrame implements VisibilityController {
     private final Dimension frameDimension;
 
-    //private Game game;
+    private Game game;
 
-    public TitleScreen() {
+    public TitleScreen(Game game) {
         super();
 
-        //this.game = game;
+        this.game = game;
 
 
         frameDimension = new Dimension(800, 600);
@@ -27,6 +32,7 @@ public class TitleScreen extends JFrame implements VisibilityController {
         panel.setLayout(new BorderLayout());
 
         JButton b1 = new JButton("Ahojky kamarádíčku");
+        b1.setFocusPainted(false);
         JLabel l1 = new JLabel("cauky mnauky1");
         JLabel l2 = new JLabel("cauky mnauky2");
         JLabel l3 = new JLabel("cauky mnauky3");
@@ -44,20 +50,20 @@ public class TitleScreen extends JFrame implements VisibilityController {
         panel.add(b1, BorderLayout.SOUTH);
 
 
-        //kyticka = new ImageIcon(getClass().getResourceAsStream("/kyticka.png").readAllBytes());
         ImageIcon kyticka = new ImageIcon(getClass().getResource("/kyticka.png"));
         panel.add(new JLabel(kyticka, JLabel.CENTER), BorderLayout.CENTER);
 
 
-        //b1.addActionListener(new TitleScreenButtonAction(game));
-
+        b1.addActionListener(x->game.showGame());
 
         this.add(panel);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.setTitle("Okýnko");
-        this.setSize(frameDimension);
+        this.setPreferredSize(frameDimension);
+
+        this.pack();
 
         this.setLocationRelativeTo(null);
         this.setResizable(false);
