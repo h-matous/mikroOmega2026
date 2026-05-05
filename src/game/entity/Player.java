@@ -8,7 +8,6 @@ import java.awt.*;
 import java.util.HashMap;
 
 public class Player extends Entity {
-    Canvas2D gp;
     KeyHandler keyH;
 
     private int maxVel;
@@ -23,8 +22,7 @@ public class Player extends Entity {
     private Animation currentAnimation;
 
 
-    public Player(Canvas2D gp, KeyHandler keyH, TextureManager texMngr, int targetUPS) {
-        this.gp = gp;
+    public Player(KeyHandler keyH, TextureManager texMngr, int targetUPS) {
         this.keyH = keyH;
 
         setDefaultValues();

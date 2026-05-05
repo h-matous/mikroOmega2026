@@ -9,12 +9,20 @@ public class Game {
     private final TitleScreen titleScreen;
     private final GameSceen gameSceen;
 
+    private final int targetUPS;
+
+    private final GameLogic gameLogic;
+
 
     public Game() {
         setLookAndFeel();
 
+        targetUPS = 100;
+
+        gameLogic = new GameLogic(new KeyHandler(), targetUPS);
+
         titleScreen = new TitleScreen(this);
-        gameSceen = new GameSceen();
+        gameSceen = new GameSceen(gameLogic, targetUPS);
     }
 
 

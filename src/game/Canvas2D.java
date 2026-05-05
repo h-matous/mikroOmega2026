@@ -1,43 +1,44 @@
 package game;
 
-import game.entity.Player;
-
 import javax.swing.*;
 import java.awt.*;
 
 
 public class Canvas2D extends JPanel implements Runnable {
 
-    private final int targetUPS = 100;
+    private final int targetUPS;
 
-    private int frames = 0;
-    private int currentFPS = 0;
-    private long lastFPSCheck = System.nanoTime();
+    private int frames;
+    private int currentFPS;
+    private long lastFPSCheck;
 
-    private final TextureManager texMngr;
+    private final GameLogic gameLogic;
 
     private KeyHandler keyH;
     private Thread gameThread;
 
-    private Player player;
 
-
-
-    public Canvas2D(Dimension frameSize) {
+    public Canvas2D(GameLogic gameLogic, Dimension frameSize, int targetUPS) {
         super();
+
+        frames = 0;
+        currentFPS = 0;
+        lastFPSCheck = System.nanoTime();
+
+
+        this.targetUPS = targetUPS;
 
         this.setDoubleBuffered(true);
         this.setPreferredSize(frameSize);
         this.setBackground(Color.BLACK);
 
-        keyH = new KeyHandler();
+        this.gameLogic = gameLogic;
+
+
+        keyH = gameLogic.getKeyHandler();
 
         this.addKeyListener(keyH);
         this.setFocusable(true);
-
-        texMngr = new TextureManager();
-
-        player = new Player(this, keyH, texMngr, targetUPS);
     }
 
 
@@ -96,7 +97,7 @@ public class Canvas2D extends JPanel implements Runnable {
     }
 
     public void update() {
-        player.update();
+        gameLogic.update();
     }
 
     @Override
@@ -105,7 +106,7 @@ public class Canvas2D extends JPanel implements Runnable {
 
         Graphics2D gfx = (Graphics2D) g;
 
-        player.draw(gfx);
+        gameLogic.paint(gfx);
 
         gfx.dispose();
     }
