@@ -1,7 +1,7 @@
 package game;
 
 public interface VisibilityController {
-    void show();
+    abstract void show();
 
-    void hide();
+    abstract void hide();
 }

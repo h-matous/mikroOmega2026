@@ -30,7 +30,7 @@ public class Canvas2D extends JPanel implements Runnable {
 
         this.setDoubleBuffered(true);
         this.setPreferredSize(frameSize);
-        this.setBackground(Color.BLACK);
+        this.setBackground(Color.BLUE);
 
         this.gameLogic = gameLogic;
 

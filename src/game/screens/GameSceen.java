@@ -14,11 +14,10 @@ public class GameSceen extends JFrame implements VisibilityController {
     private final int targetUPS;
     private GameLogic gameLogic;
 
-    public GameSceen(GameLogic gameLogic, int targetUPS) {
+    public GameSceen(Dimension screenSize, GameLogic gameLogic, int targetUPS) {
         super();
 
-        //1920 * 0,25; 1080 * 0,8
-        frameDimension = new Dimension(480, 864);
+        frameDimension = screenSize;
 
         this.targetUPS = targetUPS;
         this.gameLogic = gameLogic;

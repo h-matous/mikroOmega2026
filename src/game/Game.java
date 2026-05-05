@@ -4,12 +4,15 @@ import game.screens.GameSceen;
 import game.screens.TitleScreen;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Game {
     private final TitleScreen titleScreen;
     private final GameSceen gameSceen;
 
     private final int targetUPS;
+
+    private final Dimension screenSize;
 
     private final GameLogic gameLogic;
 
@@ -19,10 +22,13 @@ public class Game {
 
         targetUPS = 100;
 
-        gameLogic = new GameLogic(new KeyHandler(), targetUPS);
+        //1920 * 0,25; 1080 * 0,8
+        screenSize = new Dimension(480, 864);
+
+        gameLogic = new GameLogic(screenSize, new KeyHandler(), targetUPS);
 
         titleScreen = new TitleScreen(this);
-        gameSceen = new GameSceen(gameLogic, targetUPS);
+        gameSceen = new GameSceen(screenSize, gameLogic, targetUPS);
     }
 
 
