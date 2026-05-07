@@ -13,6 +13,7 @@ public class GameLogic {
 
     private final TextureManager texMngr;
     private Player player;
+    private Score score;
 
     private AnimatedBackground bg;
 
@@ -26,6 +27,7 @@ public class GameLogic {
         texMngr = new TextureManager();
 
         player = new Player(keyH, texMngr, targetUPS);
+        score = new Score(screenSize);
 
         bg = new AnimatedBackground(screenSize, targetUPS);
     }
@@ -36,8 +38,9 @@ public class GameLogic {
     }
 
     public void paint(Graphics2D gfx) {
-        player.draw(gfx);
+        score.draw(gfx);
         bg.draw(gfx);
+        player.draw(gfx);
     }
 
     public KeyHandler getKeyHandler() {

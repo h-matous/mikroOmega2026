@@ -105,6 +105,8 @@ public class Canvas2D extends JPanel implements Runnable {
         super.paintComponent(g);
 
         Graphics2D gfx = (Graphics2D) g;
+        gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        //gfx.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         gameLogic.paint(gfx);
 

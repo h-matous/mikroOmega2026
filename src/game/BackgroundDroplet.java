@@ -3,7 +3,6 @@ package game;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
-import java.util.Queue;
 
 public class BackgroundDroplet {
     private int squareCount;
