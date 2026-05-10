@@ -69,8 +69,8 @@ public class Canvas2D extends JPanel implements Runnable {
 
             //Fixed timestep
             while (accumulator >= updateInterval) {
-                update();
                 accumulator = accumulator - updateInterval;
+                update();
             }
 
             this.repaint();
@@ -107,6 +107,7 @@ public class Canvas2D extends JPanel implements Runnable {
         Graphics2D gfx = (Graphics2D) g;
         gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         //gfx.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        //gfx.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
         gameLogic.paint(gfx);
 

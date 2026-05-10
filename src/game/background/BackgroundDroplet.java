@@ -1,4 +1,4 @@
-package game;
+package game.background;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -16,11 +16,11 @@ public class BackgroundDroplet {
 
     private ArrayDeque<Integer> queue;
 
-    public BackgroundDroplet(int screenHeight) {
+    public BackgroundDroplet(int screenHeight, Color squareColor) {
         squareCount = 8;
-        squareLen = 10;
+        squareLen = 25;
 
-        squareColor = Color.ORANGE;
+        this.squareColor = squareColor;
 
         drop = new BufferedImage(squareLen, squareLen * squareCount, BufferedImage.TYPE_INT_ARGB);
 
@@ -43,11 +43,21 @@ public class BackgroundDroplet {
     }
 
     public void draw(Graphics2D gfx) {
-        gfx.setColor(new Color(255, 200, 0, 50));
+        gfx.setColor(squareColor);
 
+        /*
         for (int i = 0; i < queue.size(); i++) {
             int currentDropLen = calcLenFromIndex(i);
             gfx.fillRect(0, queue.getFirst(), currentDropLen, currentDropLen);
+        }
+        */
+
+        for (int i = 0; i < queue.size(); i++) {
+            int currentDropLen = calcLenFromIndex(i);
+            gfx.setColor(squareColor);
+            gfx.fillRect(0, queue.getFirst(), currentDropLen, currentDropLen);
+            gfx.setColor(Color.BLACK);
+            gfx.drawRect(0, queue.getFirst(), currentDropLen, currentDropLen);
         }
     }
 }

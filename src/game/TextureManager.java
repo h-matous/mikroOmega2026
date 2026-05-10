@@ -37,6 +37,8 @@ public class TextureManager {
 
 
     public TextureManager() {
+        initDefaultTexture();
+
         ArrayList<String> texturesToLoad = new ArrayList<>();
 
         texturesToLoad.add("assets/banana-1.png");
@@ -46,8 +48,6 @@ public class TextureManager {
         texturesToLoad.add("assets/monkey-idle.png");
         texturesToLoad.add("assets/monkey-walk-left.png");
         texturesToLoad.add("assets/monkey-walk-right.png");
-
-        initDefaultTexture();
 
 
         textureMap = new HashMap<>();

@@ -60,7 +60,7 @@ public class TitleScreen extends JFrame implements VisibilityController {
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        this.setTitle("Okýnko");
+        this.setTitle("Monkey Banana Catch!");
         this.setPreferredSize(frameDimension);
 
         this.pack();

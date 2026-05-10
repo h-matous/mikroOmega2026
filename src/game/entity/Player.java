@@ -1,8 +1,8 @@
 package game.entity;
 
-import game.Canvas2D;
 import game.KeyHandler;
 import game.TextureManager;
+import game.Vector2i;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -13,7 +13,21 @@ public class Player extends Entity {
     private int maxVel;
 
     private enum Direction {
-        IDLE, LEFT, RIGHT
+        IDLE(new Vector2i(0, 0)),
+        UP(new Vector2i(0, -1)),
+        DOWN(new Vector2i(0, 1)),
+        LEFT(new Vector2i(-1, 0)),
+        RIGHT(new Vector2i(1, 0));
+
+        private final Vector2i dir;
+
+        Direction(Vector2i dir) {
+            this.dir = dir;
+        }
+
+        public Vector2i getVector() {
+            return dir;
+        }
     }
 
     private Direction direction;
@@ -22,23 +36,21 @@ public class Player extends Entity {
     private Animation currentAnimation;
 
 
-    public Player(KeyHandler keyH, TextureManager texMngr, int targetUPS) {
+    public Player(int scale, KeyHandler keyH, TextureManager texMngr, int targetUPS) {
         this.keyH = keyH;
 
-        setDefaultValues();
+        setDefaultValues(scale, texMngr);
 
         initializeAnimationMap(texMngr, targetUPS);
     }
 
-    public void setDefaultValues() {
-        this.xPos = 100;
-        this.yPos = 100;
+    public void setDefaultValues(int scale, TextureManager texMngr) {
+        this.pos = new Vector2i(100, 100);
+        this.scale = scale;
+        this.size = new Vector2i(texMngr.getTexture("monkey-idle").getWidth());
+        this.vel = new Vector2i();
 
-        this.width = 150;
-        this.height = 150;
-
-        this.xVel = 0;
-        this.yVel = 0;
+        this.collider = new Collider(new Vector2i(20, 26), new Vector2i(24, 38));
 
         direction = Direction.IDLE;
 
@@ -51,6 +63,8 @@ public class Player extends Entity {
         animationMap = new HashMap<>();
 
         animationMap.put(Direction.IDLE, new Animation(texMngr.getTexture("monkey-idle"), 1, 1, targetUPS));
+        animationMap.put(Direction.UP, new Animation(texMngr.getTexture("monkey-idle"), 1, 1, targetUPS));
+        animationMap.put(Direction.DOWN, new Animation(texMngr.getTexture("monkey-idle"), 1, 1, targetUPS));
         animationMap.put(Direction.LEFT, new Animation(texMngr.getTexture("monkey-walk-left"), 8, 18, targetUPS));
         animationMap.put(Direction.RIGHT, new Animation(texMngr.getTexture("monkey-walk-right"), 8, 18, targetUPS));
 
@@ -58,36 +72,42 @@ public class Player extends Entity {
     }
 
     public void update() {
-        xVel = 0;
-        yVel = 0;
+        direction = Direction.IDLE;
+        vel.setBoth(0 ,0);
 
         if (keyH.isUpPressed()) {
-            yVel = yVel - maxVel;
-            direction = Direction.IDLE;
+            direction = Direction.UP;
+            vel.add(direction.getVector());
         }
         if (keyH.isDownPressed()) {
-            yVel = yVel + maxVel;
-            direction = Direction.IDLE;
+            direction = Direction.DOWN;
+            vel.add(direction.getVector());
         }
         if (keyH.isLeftPressed()) {
-            xVel = xVel - maxVel;
             direction = Direction.LEFT;
+            vel.add(direction.getVector());
         }
         if (keyH.isRightPressed()) {
-            xVel = xVel + maxVel;
             direction = Direction.RIGHT;
+            vel.add(direction.getVector());
         }
 
-        xPos = xPos + xVel;
-        yPos = yPos + yVel;
+        if (vel.getX() == 0) direction = Direction.IDLE;
 
-        if (xVel == 0) direction = Direction.IDLE;
+        vel.multiply(maxVel);
+
+        pos.add(vel);
+
 
         currentAnimation = animationMap.get(direction);
         currentAnimation.update();
     }
 
     public void draw(Graphics2D gfx) {
-        gfx.drawImage(currentAnimation.getCurrentFrame().getImage(), xPos, yPos, width, height, null);
+        if (showBounds) {
+            this.drawBounds(gfx);
+        }
+
+        gfx.drawImage(currentAnimation.getCurrentFrame().getImage(), pos.getX(), pos.getY(), size.getX() * scale, size.getY() * scale, null);
     }
 }

@@ -1,4 +1,6 @@
-package game;
+package game.background;
+
+import game.Texture;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -17,8 +19,11 @@ public class AnimatedBackground {
     private ArrayList<BackgroundDroplet> droplets;
     private int dropletCount;
 
+    private Color dropletColor;
+    private Color topColor;
+    private Color bottomColor;
+
     public AnimatedBackground(Dimension size, int targetUPS) {
-        bg = new Texture(new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB));
         this.targetUPS = targetUPS;
 
         this.targetAnimFPS = 10;
@@ -28,6 +33,14 @@ public class AnimatedBackground {
 
         droplets = new ArrayList<>();
         dropletCount = 1;
+
+        //dropletColor = new Color(50, 200, 200, 255);
+        dropletColor = new Color(20, 180, 65, 255);
+        //dropletColor = new Color(60, 180, 155, 255);
+        topColor = new Color(20, 180, 145, 255);
+        bottomColor = new Color(5, 105, 80, 255);
+
+        bg = new Texture(new LinearVerticalGradientImage(size, topColor, bottomColor));
     }
 
     public void update() {
@@ -38,7 +51,7 @@ public class AnimatedBackground {
 
             //Adding droplets
             if (droplets.size() < dropletCount) {
-                droplets.add(new BackgroundDroplet(bg.getHeight()));
+                droplets.add(new BackgroundDroplet(bg.getHeight(), dropletColor));
             }
 
             for (BackgroundDroplet droplet : droplets) {

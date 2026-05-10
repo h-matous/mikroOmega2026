@@ -9,6 +9,15 @@ public class Vector2i {
         this.y = y;
     }
 
+    public Vector2i(Vector2i vec) {
+        this.x = vec.x;
+        this.y = vec.y;
+    }
+
+    public Vector2i(int common) {
+        setBoth(common);
+    }
+
     public Vector2i() {
         this.x = 0;
         this.y = 0;
@@ -30,20 +39,41 @@ public class Vector2i {
         this.y = y;
     }
 
-    public void offsetX(int amount) {
-        x = x + amount;
+    public void setBoth(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
-    public void offsetY(int amount) {
-        y = y + amount;
+    public void setBoth(int common) {
+        this.x = common;
+        this.y = common;
     }
 
-    public void offset(int amountX, int amountY) {
-        offsetX(amountX);
-        offsetY(amountY);
+
+    public void multiply(double factor) {
+        this.x = (int) (this.x * factor);
+        this.y = (int) (this.y * factor);
     }
 
-    public void offset(Vector2i amount) {
-        offset(amount.getX(), amount.getY());
+    public void multiply(int factor) {
+        this.x = this.x * factor;
+        this.y = this.y * factor;
+    }
+
+    public void addX(int amount) {
+        this.x = this.x + amount;
+    }
+
+    public void addY(int amount) {
+        this.y = this.y + amount;
+    }
+
+    public void add(int amountX, int amountY) {
+        addX(amountX);
+        addY(amountY);
+    }
+
+    public void add(Vector2i amount) {
+        add(amount.getX(), amount.getY());
     }
 }

@@ -32,7 +32,7 @@ public class GameSceen extends JFrame implements VisibilityController {
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        this.setTitle("Hra");
+        this.setTitle("Monkey Banana Catch!");
 
         this.setResizable(true);
         this.pack();
