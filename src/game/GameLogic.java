@@ -5,6 +5,7 @@ import game.entity.Banana;
 import game.entity.Player;
 
 import java.awt.*;
+import java.util.Random;
 
 public class GameLogic {
     private Dimension screenSize;
@@ -22,14 +23,20 @@ public class GameLogic {
 
     private final AnimatedBackground bg;
 
+    private final Random rnd;
+
     public GameLogic(Dimension screenSize, KeyHandler keyH, int targetUPS) {
         this.screenSize = screenSize;
 
-        this.scale = 6;
+        this.scale = 5;
 
         this.keyH = keyH;
 
         this.targetUPS = targetUPS;
+
+
+        rnd = new Random();
+
 
         texMngr = new TextureManager();
 
@@ -37,7 +44,8 @@ public class GameLogic {
         exampleBanana = new Banana(scale, texMngr, targetUPS);
         score = new Score(screenSize);
 
-        bg = new AnimatedBackground(screenSize, targetUPS);
+        bg = new AnimatedBackground(screenSize, rnd, targetUPS);
+
     }
 
     public void update() {

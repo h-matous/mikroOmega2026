@@ -3,40 +3,44 @@ package game.background;
 import game.Texture;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.ArrayDeque;
+import java.util.Random;
 
 public class AnimatedBackground {
-    private Texture bg;
+    private final Texture bg;
 
     private final int targetUPS;
 
-    private int targetAnimFPS;
+    private final int targetAnimFPS;
 
     private int updateCounter;
-    private int frameDelay; //updates needed to switch frame
+    private final int frameDelay; //updates needed to switch frame
 
-    private ArrayList<BackgroundDroplet> droplets;
-    private int dropletCount;
+    private final Dimension frameSize;
 
-    private Color dropletColor;
-    private Color topColor;
-    private Color bottomColor;
+    private final ArrayDeque<BackgroundDroplet> droplets;
 
-    public AnimatedBackground(Dimension size, int targetUPS) {
+    private final Color dropletColor;
+    private final Color topColor;
+    private final Color bottomColor;
+
+    private final Random rnd;
+
+    public AnimatedBackground(Dimension size, Random rnd, int targetUPS) {
         this.targetUPS = targetUPS;
 
-        this.targetAnimFPS = 10;
+        this.targetAnimFPS = 18;
 
         this.updateCounter = 0;
         this.frameDelay = targetUPS / targetAnimFPS;
 
-        droplets = new ArrayList<>();
-        dropletCount = 1;
+        this.frameSize = size;
 
-        //dropletColor = new Color(50, 200, 200, 255);
-        dropletColor = new Color(20, 180, 65, 255);
-        //dropletColor = new Color(60, 180, 155, 255);
+        this.rnd = rnd;
+
+        droplets = new ArrayDeque<>();
+
+        dropletColor = new Color(0, 255, 165, 30);
         topColor = new Color(20, 180, 145, 255);
         bottomColor = new Color(5, 105, 80, 255);
 
@@ -49,10 +53,14 @@ public class AnimatedBackground {
         if (updateCounter >= frameDelay) {
             updateCounter = 0;
 
-            //Adding droplets
-            if (droplets.size() < dropletCount) {
-                droplets.add(new BackgroundDroplet(bg.getHeight(), dropletColor));
+
+            if (!droplets.isEmpty() && droplets.getFirst().isOffScreen()) {
+                droplets.removeFirst();
             }
+
+            //Adding droplets
+            droplets.add(new BackgroundDroplet(frameSize, rnd, dropletColor));
+
 
             for (BackgroundDroplet droplet : droplets) {
                 droplet.update();

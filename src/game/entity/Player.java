@@ -55,6 +55,8 @@ public class Player extends Entity {
         direction = Direction.IDLE;
 
         this.maxVel = 4;
+
+        this.rotation = 0;
     }
 
 
@@ -71,6 +73,7 @@ public class Player extends Entity {
         currentAnimation = animationMap.get(direction);
     }
 
+    @Override
     public void update() {
         direction = Direction.IDLE;
         vel.setBoth(0 ,0);
@@ -103,6 +106,7 @@ public class Player extends Entity {
         currentAnimation.update();
     }
 
+    @Override
     public void draw(Graphics2D gfx) {
         if (showBounds) {
             this.drawBounds(gfx);

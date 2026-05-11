@@ -44,6 +44,8 @@ public class TextureManager {
         texturesToLoad.add("assets/banana-1.png");
         texturesToLoad.add("assets/banana-2.png");
         texturesToLoad.add("assets/banana-3.png");
+        texturesToLoad.add("assets/banana-4.png");
+        texturesToLoad.add("assets/banana-5.png");
 
         texturesToLoad.add("assets/monkey-idle.png");
         texturesToLoad.add("assets/monkey-walk-left.png");

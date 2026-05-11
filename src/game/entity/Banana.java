@@ -11,7 +11,6 @@ public class Banana extends Entity {
 
     Texture texture;
 
-    int rotation;
 
     public Banana(int scale, TextureManager texMngr, int targetUPS) {
 
@@ -37,8 +36,8 @@ public class Banana extends Entity {
     @Override
     public void update() {
         //TODO: Implement proper collisions and falling movement
-        pos.addY(maxVel);
-        rotation = rotation + 15;
+        //pos.addY(maxVel);
+        rotation = rotation + 3;
     }
 
     @Override

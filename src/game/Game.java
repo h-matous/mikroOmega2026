@@ -16,14 +16,15 @@ public class Game {
 
     private final GameLogic gameLogic;
 
+    //TODO: Implement GameData and maybe even a Loader
 
     public Game() {
         setLookAndFeel();
 
         targetUPS = 100;
 
-        //1920 * 0,25; 1080 * 0,8
-        screenSize = new Dimension(480, 864);
+        //1920 * 0,5; 1080 * 0,8
+        screenSize = new Dimension(960, 864);
 
         gameLogic = new GameLogic(screenSize, new KeyHandler(), targetUPS);
 

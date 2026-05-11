@@ -11,6 +11,8 @@ public abstract class Entity {
     protected Vector2i size;
     protected Vector2i vel;
 
+    protected double rotation;
+
     protected Collider collider;
 
     protected static final boolean showBounds = true;
@@ -21,6 +23,8 @@ public abstract class Entity {
 
     protected void drawBounds(Graphics2D gfx) {
         gfx.setColor(Color.BLACK);
+        //TODO: Draw rotated bounds for the banana
+
         //Texture rectangle
         gfx.drawRect(pos.getX(), pos.getY(), size.getX() * scale, size.getY() * scale);
 

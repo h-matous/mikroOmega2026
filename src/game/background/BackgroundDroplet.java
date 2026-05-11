@@ -1,63 +1,59 @@
 package game.background;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class BackgroundDroplet {
-    private int squareCount;
-    private int squareLen;
-    private Color squareColor;
+    private final int squareCount;
+    private final int squareLen;
+    private final Color squareColor;
 
+    private final Dimension frameSize;
 
-    private BufferedImage drop;
+    private final int xPos;
 
-    private int screenHeight;
+    private final ArrayList<Integer> squares;
 
-    private ArrayDeque<Integer> queue;
+    //TODO: Fix
+    public BackgroundDroplet(Dimension frameSize, Random rnd, Color squareColor) {
+        squareCount = 20;
+        squareLen = frameSize.width / 30;
 
-    public BackgroundDroplet(int screenHeight, Color squareColor) {
-        squareCount = 8;
-        squareLen = 25;
+        this.frameSize = frameSize;
 
         this.squareColor = squareColor;
 
-        drop = new BufferedImage(squareLen, squareLen * squareCount, BufferedImage.TYPE_INT_ARGB);
+        this.xPos = rnd.nextInt(frameSize.width - squareLen);
 
-        this.screenHeight = screenHeight;
-
-        queue = new ArrayDeque<>();
+        squares = new ArrayList<>();
 
         for (int i = 0; i < squareCount; i++) {
-            queue.add(i * squareLen);
+            squares.add(i * squareLen - squareCount * squareLen);
         }
     }
 
+    public boolean isOffScreen() {
+        return squares.getFirst() > frameSize.height;
+    }
+
+
     private int calcLenFromIndex(int index) {
-        return squareLen - (index * (squareCount / squareLen));
+        return index * (squareLen / squareCount);
     }
 
     public void update() {
-        System.out.println(queue);
-        queue.addFirst(queue.removeLast() + squareLen);
+        squares.add(squares.removeFirst() + squareLen  * squareCount);
     }
 
     public void draw(Graphics2D gfx) {
         gfx.setColor(squareColor);
 
-        /*
-        for (int i = 0; i < queue.size(); i++) {
+        for (int i = 0; i < squares.size(); i++) {
             int currentDropLen = calcLenFromIndex(i);
-            gfx.fillRect(0, queue.getFirst(), currentDropLen, currentDropLen);
-        }
-        */
+            int xOffset = (squareLen - currentDropLen) / 2;
 
-        for (int i = 0; i < queue.size(); i++) {
-            int currentDropLen = calcLenFromIndex(i);
-            gfx.setColor(squareColor);
-            gfx.fillRect(0, queue.getFirst(), currentDropLen, currentDropLen);
-            gfx.setColor(Color.BLACK);
-            gfx.drawRect(0, queue.getFirst(), currentDropLen, currentDropLen);
+            gfx.fillRect(xPos + xOffset, squares.get(i), currentDropLen, currentDropLen);
         }
     }
 }
