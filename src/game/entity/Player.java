@@ -50,7 +50,7 @@ public class Player extends Entity {
         this.size = new Vector2i(texMngr.getTexture("monkey-idle").getWidth());
         this.vel = new Vector2i();
 
-        this.collider = new Collider(new Vector2i(20, 26), new Vector2i(24, 38));
+        this.collider = new Collider(new Vector2i(20, 26), scale, new Vector2i(24, 38));
 
         direction = Direction.IDLE;
 
@@ -72,6 +72,8 @@ public class Player extends Entity {
 
         currentAnimation = animationMap.get(direction);
     }
+
+
 
     @Override
     public void update() {

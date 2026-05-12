@@ -53,6 +53,10 @@ public class GameLogic {
         score.addScore(1);
         exampleBanana.update();
         player.update();
+
+        if (player.collidesWith(exampleBanana)) {
+            System.out.println("COLLISION DETECTED");
+        }
     }
 
     public void paint(Graphics2D gfx) {

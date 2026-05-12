@@ -34,7 +34,7 @@ public class GameSceen extends JFrame implements VisibilityController {
 
         this.setTitle("Monkey Banana Catch!");
 
-        this.setResizable(true);
+        this.setResizable(false);
         this.pack();
 
         this.setLocationRelativeTo(null);

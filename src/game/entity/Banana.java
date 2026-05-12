@@ -26,7 +26,7 @@ public class Banana extends Entity {
         this.size = new Vector2i(texture.getWidth());
         this.vel = new Vector2i();
 
-        this.collider = new Collider(new Vector2i(28, 23), new Vector2i(9, 14));
+        this.collider = new Collider(new Vector2i(28, 23), scale, new Vector2i(9, 14));
 
         this.maxVel = 5;
 
@@ -37,7 +37,7 @@ public class Banana extends Entity {
     public void update() {
         //TODO: Implement proper collisions and falling movement
         //pos.addY(maxVel);
-        rotation = rotation + 3;
+        rotation = rotation + 5;
     }
 
     @Override
