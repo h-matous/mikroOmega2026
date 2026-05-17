@@ -45,7 +45,6 @@ public class GameLogic {
         score = new Score(screenSize);
 
         bg = new AnimatedBackground(screenSize, rnd, targetUPS);
-
     }
 
     public void update() {
@@ -56,6 +55,7 @@ public class GameLogic {
 
         if (player.collidesWith(exampleBanana)) {
             System.out.println("COLLISION DETECTED");
+            //exampleBanana.getCollider().disable();
         }
     }
 

@@ -50,7 +50,7 @@ public class Player extends Entity {
         this.size = new Vector2i(texMngr.getTexture("monkey-idle").getWidth());
         this.vel = new Vector2i();
 
-        this.collider = new Collider(new Vector2i(20, 26), scale, new Vector2i(24, 38));
+        this.collider = new Collider(new Vector2i(20, 26), new Vector2i(24, 38));
 
         direction = Direction.IDLE;
 
@@ -77,6 +77,8 @@ public class Player extends Entity {
 
     @Override
     public void update() {
+        super.update();
+
         direction = Direction.IDLE;
         vel.setBoth(0 ,0);
 
@@ -110,9 +112,7 @@ public class Player extends Entity {
 
     @Override
     public void draw(Graphics2D gfx) {
-        if (showBounds) {
-            this.drawBounds(gfx);
-        }
+        super.draw(gfx);
 
         gfx.drawImage(currentAnimation.getCurrentFrame().getImage(), pos.getX(), pos.getY(), size.getX() * scale, size.getY() * scale, null);
     }

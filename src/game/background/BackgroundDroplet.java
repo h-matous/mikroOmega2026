@@ -15,6 +15,8 @@ public class BackgroundDroplet {
 
     private final ArrayList<Integer> squares;
 
+    private final int[] squareSizes;
+
     //TODO: Fix
     public BackgroundDroplet(Dimension frameSize, Random rnd, Color squareColor) {
         squareCount = 20;
@@ -30,6 +32,12 @@ public class BackgroundDroplet {
 
         for (int i = 0; i < squareCount; i++) {
             squares.add(i * squareLen - squareCount * squareLen);
+        }
+
+        squareSizes = new int[squareCount];
+
+        for (int i = 0; i < squareSizes.length; i++) {
+            squareSizes[i] = calcLenFromIndex(i);
         }
     }
 
@@ -50,7 +58,7 @@ public class BackgroundDroplet {
         gfx.setColor(squareColor);
 
         for (int i = 0; i < squares.size(); i++) {
-            int currentDropLen = calcLenFromIndex(i);
+            int currentDropLen = squareSizes[i];
             int xOffset = (squareLen - currentDropLen) / 2;
 
             gfx.fillRect(xPos + xOffset, squares.get(i), currentDropLen, currentDropLen);

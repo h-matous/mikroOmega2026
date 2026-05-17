@@ -41,7 +41,7 @@ public class Canvas2D extends JPanel implements Runnable {
         this.setFocusable(true);
     }
 
-    //TODO: Fix by rendering to a BufferedImage first and passing that to paintComponent
+    //TODO: Fix by rendering to a BufferedImage first and passing that to paintComponent (ConcurrentModificationException in ArrayDeque)
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();

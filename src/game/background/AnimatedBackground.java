@@ -29,7 +29,7 @@ public class AnimatedBackground {
     public AnimatedBackground(Dimension size, Random rnd, int targetUPS) {
         this.targetUPS = targetUPS;
 
-        this.targetAnimFPS = 18;
+        this.targetAnimFPS = 40;
 
         this.updateCounter = 0;
         this.frameDelay = targetUPS / targetAnimFPS;
