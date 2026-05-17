@@ -29,7 +29,7 @@ public class AnimatedBackground {
     public AnimatedBackground(Dimension size, Random rnd, int targetUPS) {
         this.targetUPS = targetUPS;
 
-        this.targetAnimFPS = 40;
+        this.targetAnimFPS = 20;
 
         this.updateCounter = 0;
         this.frameDelay = targetUPS / targetAnimFPS;
@@ -53,7 +53,7 @@ public class AnimatedBackground {
         if (updateCounter >= frameDelay) {
             updateCounter = 0;
 
-
+            //Deleting a droplet if it falls too far down
             if (!droplets.isEmpty() && droplets.getFirst().isOffScreen()) {
                 droplets.removeFirst();
             }
@@ -61,7 +61,7 @@ public class AnimatedBackground {
             //Adding droplets
             droplets.add(new BackgroundDroplet(frameSize, rnd, dropletColor));
 
-
+            //Updating droplets
             for (BackgroundDroplet droplet : droplets) {
                 droplet.update();
             }
@@ -75,5 +75,4 @@ public class AnimatedBackground {
             droplet.draw(gfx);
         }
     }
-
 }

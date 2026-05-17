@@ -19,8 +19,12 @@ public class BackgroundDroplet {
 
     //TODO: Fix
     public BackgroundDroplet(Dimension frameSize, Random rnd, Color squareColor) {
-        squareCount = 20;
-        squareLen = frameSize.width / 30;
+        //squareCount = 20;
+        //squareLen = frameSize.width / 30;
+
+        //TODO: For debugging, original is ↑ up above
+        squareCount = 959;
+        squareLen = frameSize.width - 1;
 
         this.frameSize = frameSize;
 
@@ -47,7 +51,7 @@ public class BackgroundDroplet {
 
 
     private int calcLenFromIndex(int index) {
-        return index * (squareLen / squareCount);
+        return (index + 1) * (squareLen / squareCount);
     }
 
     public void update() {

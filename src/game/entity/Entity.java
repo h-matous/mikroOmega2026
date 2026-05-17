@@ -59,6 +59,7 @@ public abstract class Entity {
         if (showBounds) {
             this.drawBounds(gfx);
         }
+
     }
 
     protected void drawBounds(Graphics2D gfx) {

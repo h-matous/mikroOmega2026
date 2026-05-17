@@ -22,7 +22,6 @@ public class LinearVerticalGradientImage extends BufferedImage {
         GradientPaint gradient = new GradientPaint(0, 0, topColor, 0, height, bottomColor);
 
         gfx.setPaint(gradient);
-
         gfx.fillRect(0, 0, width, height);
 
         gfx.dispose();

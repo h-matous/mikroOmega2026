@@ -15,7 +15,7 @@ public class Texture {
     }
 
     public Texture getRotatedInstance(double angleDegrees) {
-        BufferedImage rotatedImage = new BufferedImage(image.getWidth(),image.getHeight(), image.getType());
+        BufferedImage rotatedImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
 
         Graphics2D gfx = (Graphics2D) rotatedImage.getGraphics();
 
@@ -30,6 +30,31 @@ public class Texture {
         return new Texture(rotatedImage);
     }
 
+    public Texture getHorizontallyMirroredInstance() {
+        BufferedImage mirroredImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+
+        Graphics2D gfx = (Graphics2D) mirroredImage.getGraphics();
+
+        gfx.scale(-1, 1);
+        gfx.drawImage(image, null, -mirroredImage.getWidth(), 0);
+
+        gfx.dispose();
+
+        return new Texture(mirroredImage);
+    }
+
+    public Texture getVerticallyMirroredInstance() {
+        BufferedImage mirroredImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+
+        Graphics2D gfx = (Graphics2D) mirroredImage.getGraphics();
+
+        gfx.scale(1, -1);
+        gfx.drawImage(image, null, 0, -mirroredImage.getHeight());
+
+        gfx.dispose();
+
+        return new Texture(mirroredImage);
+    }
 
 
     public Texture getSubTexture(int x, int y, int width, int height) {
