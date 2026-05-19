@@ -3,11 +3,11 @@ package game.entity;
 import game.Texture;
 
 public class Animation {
-    private Texture[] frames;
+    private final Texture[] frames;
     private int currentFrame;
 
     private int updateCounter;
-    private int frameDelay; //updates needed to switch frame
+    private final int frameDelay; //updates needed to switch frame
 
     public Animation(Texture[] frames, int targetAnimFPS, int targetUPS) {
         this.frames = frames;
@@ -18,15 +18,25 @@ public class Animation {
     }
 
     public Animation(Texture spriteSheet, int frameCount, int targetAnimFPS, int targetUPS) {
-        this.frames = new Texture[frameCount];
-        for (int i = 0; i < frames.length; i++) {
-            frames[i] = spriteSheet.getSubTexture(0, i * (spriteSheet.getHeight() / frameCount), spriteSheet.getWidth(), spriteSheet.getHeight() / frameCount);
+        //Checking if there was no failure when loading the Texture
+        if (!spriteSheet.isDefault()) {
+            this.frames = new Texture[frameCount];
+            for (int i = 0; i < frames.length; i++) {
+                frames[i] = spriteSheet.getSubTexture(0, i * (spriteSheet.getHeight() / frameCount), spriteSheet.getWidth(), spriteSheet.getHeight() / frameCount);
+            }
+
+            this.frameDelay = targetUPS / targetAnimFPS;
         }
+        //If using DEFAULT_TEXTURE, we limit updating, since we only have 1 frame
+        else {
+            this.frames = new Texture[]{spriteSheet};
+            this.frameDelay = targetUPS;
+        }
+
 
         this.currentFrame = 0;
 
         this.updateCounter = 0;
-        this.frameDelay = targetUPS / targetAnimFPS;
     }
 
     public void update() {

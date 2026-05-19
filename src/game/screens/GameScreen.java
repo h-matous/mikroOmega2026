@@ -3,30 +3,28 @@ package game.screens;
 import game.Canvas2D;
 import game.GameLogic;
 import game.VisibilityController;
+import game.data.GameData;
 
 import javax.swing.*;
-import java.awt.*;
 
-public class GameSceen extends JFrame implements VisibilityController {
+public class GameScreen extends JFrame implements VisibilityController {
+    private final GameData gameData;
+    private final GameLogic gameLogic;
+
     private Canvas2D canvas2D;
-    private final Dimension frameDimension;
 
-    private final int targetUPS;
-    private GameLogic gameLogic;
 
-    public GameSceen(Dimension screenSize, GameLogic gameLogic, int targetUPS) {
+    public GameScreen(GameData gameData, GameLogic gameLogic) {
         super();
 
-        frameDimension = screenSize;
-
-        this.targetUPS = targetUPS;
+        this.gameData = gameData;
         this.gameLogic = gameLogic;
 
         initialize();
     }
 
     private void initialize() {
-        canvas2D = new Canvas2D(gameLogic, frameDimension, targetUPS);
+        canvas2D = new Canvas2D(gameData, gameLogic, gameData.getGameScreenSize());
 
         this.setContentPane(canvas2D);
 

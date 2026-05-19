@@ -1,32 +1,23 @@
 package game;
 
+import game.data.GameData;
+
 import javax.swing.*;
 import java.awt.*;
 
 
 public class Canvas2D extends JPanel implements Runnable {
-
     private final int targetUPS;
-
-    private int frames;
-    private int currentFPS;
-    private long lastFPSCheck;
 
     private final GameLogic gameLogic;
 
-    private KeyHandler keyH;
     private Thread gameThread;
 
 
-    public Canvas2D(GameLogic gameLogic, Dimension frameSize, int targetUPS) {
+    public Canvas2D(GameData gameData, GameLogic gameLogic, Dimension frameSize) {
         super();
 
-        frames = 0;
-        currentFPS = 0;
-        lastFPSCheck = System.nanoTime();
-
-
-        this.targetUPS = targetUPS;
+        this.targetUPS = gameData.getConstants().getTargetUPS();
 
         this.setDoubleBuffered(true);
         this.setPreferredSize(frameSize);
@@ -35,9 +26,7 @@ public class Canvas2D extends JPanel implements Runnable {
         this.gameLogic = gameLogic;
 
 
-        keyH = gameLogic.getKeyHandler();
-
-        this.addKeyListener(keyH);
+        this.addKeyListener(gameData.getKeyHandler());
         this.setFocusable(true);
     }
 
@@ -50,7 +39,7 @@ public class Canvas2D extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        final double updateInterval = 1_000_000_000D / targetUPS; //time between each update in nanoseconds (60 UPS)
+        final double updateInterval = 1_000_000_000D / targetUPS; //time between each update in nanoseconds (100 UPS)
         double accumulator = 0;
 
         long lastTime = System.nanoTime(); //last time in nanoseconds
@@ -58,7 +47,6 @@ public class Canvas2D extends JPanel implements Runnable {
         long deltaTime; //difference of time between currentTime and lastTime in nanoseconds
         long currentTime; //current time in nanoseconds
 
-        lastFPSCheck = System.nanoTime();
 
         while (gameThread != null) {
             currentTime = System.nanoTime();
@@ -75,17 +63,6 @@ public class Canvas2D extends JPanel implements Runnable {
 
             this.repaint();
 
-            frames++;
-
-            long now = System.nanoTime();
-
-            if (now - lastFPSCheck >= 1_000_000_000L) {
-                currentFPS = frames;
-                frames = 0;
-                lastFPSCheck = now;
-
-                System.out.println("FPS: " + currentFPS);
-            }
 
             try {
                 Thread.sleep(1);

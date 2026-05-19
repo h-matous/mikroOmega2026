@@ -1,6 +1,7 @@
 package game.entity;
 
 import game.Vector2i;
+import game.data.GameData;
 
 import java.awt.*;
 
@@ -51,7 +52,7 @@ public abstract class Entity {
     }
 
 
-    public void update() {
+    public void update(GameData gameData) {
 
     }
 

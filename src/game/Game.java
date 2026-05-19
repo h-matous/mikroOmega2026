@@ -1,18 +1,16 @@
 package game;
 
-import game.screens.GameSceen;
+import game.data.GameData;
+import game.screens.GameScreen;
 import game.screens.TitleScreen;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Game {
+    private final GameData gameData;
+
     private final TitleScreen titleScreen;
-    private final GameSceen gameSceen;
-
-    private final int targetUPS;
-
-    private final Dimension screenSize;
+    private final GameScreen gameScreen;
 
     private final GameLogic gameLogic;
 
@@ -21,29 +19,26 @@ public class Game {
     public Game() {
         setLookAndFeel();
 
-        targetUPS = 100;
+        gameData = new GameData();
 
-        //1920 * 0,5; 1080 * 0,8
-        screenSize = new Dimension(960, 864);
-
-        gameLogic = new GameLogic(screenSize, new KeyHandler(), targetUPS);
+        gameLogic = new GameLogic(gameData);
 
         titleScreen = new TitleScreen(this);
-        gameSceen = new GameSceen(screenSize, gameLogic, targetUPS);
+        gameScreen = new GameScreen(gameData, gameLogic);
     }
 
 
     public void start() {
         //screens[0].show();
         titleScreen.setVisible(true);
-        gameSceen.setVisible(false);
+        gameScreen.setVisible(false);
     }
 
     public void showGame() {
-        gameSceen.setVisible(true);
+        gameScreen.setVisible(true);
         titleScreen.setVisible(false);
 
-        gameSceen.startGameThread();
+        gameScreen.startGameThread();
     }
 
     private static void setLookAndFeel() {

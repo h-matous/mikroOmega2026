@@ -10,17 +10,14 @@ import java.awt.*;
 public class TitleScreen extends JFrame implements VisibilityController {
     private final Dimension frameDimension;
 
-    private Game game;
+    private final Game game;
 
     public TitleScreen(Game game) {
         super();
 
         this.game = game;
 
-
         frameDimension = new Dimension(800, 600);
-        //GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
-        //this.getGraphicsConfiguration().getDevice().getDisplayMode();
 
         initialize();
     }

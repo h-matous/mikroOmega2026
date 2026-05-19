@@ -4,14 +4,17 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Texture {
-    private BufferedImage image;
+    private final BufferedImage image;
+    private boolean isDefault;
 
     public Texture(Texture texture) {
         this.image = texture.getImage();
+        this.isDefault = false;
     }
 
     public Texture(BufferedImage image) {
         this.image = image;
+        this.isDefault = false;
     }
 
     public Texture getRotatedInstance(double angleDegrees) {
@@ -71,5 +74,13 @@ public class Texture {
 
     public BufferedImage getImage() {
         return image;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
     }
 }

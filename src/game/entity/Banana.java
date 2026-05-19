@@ -1,44 +1,46 @@
 package game.entity;
 
 import game.Texture;
-import game.TextureManager;
+
 import game.Vector2i;
+import game.data.GameData;
 
 import java.awt.*;
 
 public class Banana extends Entity {
-    private int maxVel;
+    private Vector2i maxFallingVel;
 
     Texture texture;
 
 
-    public Banana(int scale, TextureManager texMngr, int targetUPS) {
+    public Banana(GameData gameData) {
 
-        setDefaultValues(scale, texMngr);
+        setDefaultValues(gameData);
     }
 
     //TODO: Implement Collider map and rotation pivot point map for each banana variant
-    public void setDefaultValues(int scale, TextureManager texMngr) {
-        this.texture = texMngr.getTexture("banana-1");
+    public void setDefaultValues(GameData gameData) {
+        this.texture = gameData.getTexMngr().getTexture("banana-1");
 
         this.pos = new Vector2i(0, 0);
-        this.scale = scale;
+        this.scale = gameData.getConstants().getScale();
         this.size = new Vector2i(texture.getWidth());
         this.vel = new Vector2i();
 
+        //TODO: Do something IDK
         this.collider = new Collider(new Vector2i(28, 23), new Vector2i(9, 14));
-
-        this.maxVel = 5;
+        //TOOD: maybe this too
+        this.maxFallingVel = new Vector2i(0, 5);
 
         this.rotation = 0;
     }
 
     @Override
-    public void update() {
-        super.update();
+    public void update(GameData gameData) {
+        super.update(gameData);
 
         //TODO: Implement proper collisions and falling movement
-        //pos.addY(maxVel);
+        pos.add(maxFallingVel);
         rotation = rotation + 5;
     }
 

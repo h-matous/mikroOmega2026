@@ -1,23 +1,28 @@
 package game;
 
+import game.data.GameConstants;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
 
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.Objects;
+
 
 public class TextureManager {
     private static Texture DEFAULT_TEXTURE;
 
     private static void initDefaultTexture() {
         if (DEFAULT_TEXTURE == null) {
-            final int width = 2;
-            final int height = 2;
+            final int width = 64;
+            final int height = 64;
 
             DEFAULT_TEXTURE = new Texture(new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB));
+            DEFAULT_TEXTURE.setDefault(true);
 
             Graphics gfx = DEFAULT_TEXTURE.getImage().getGraphics();
 
@@ -33,61 +38,69 @@ public class TextureManager {
     }
 
 
-    private HashMap<String, Texture> textureMap;
+    private final HashMap<String, Texture> textureMap;
 
 
-    public TextureManager() {
+    public TextureManager(GameConstants gameConstants) {
         initDefaultTexture();
-
-        ArrayList<String> texturesToLoad = new ArrayList<>();
-
-        texturesToLoad.add("assets/banana-1.png");
-        texturesToLoad.add("assets/banana-2.png");
-        texturesToLoad.add("assets/banana-3.png");
-        texturesToLoad.add("assets/banana-4.png");
-        texturesToLoad.add("assets/banana-5.png");
-
-        texturesToLoad.add("assets/monkey-idle.png");
-        texturesToLoad.add("assets/monkey-walk-left.png");
-        texturesToLoad.add("assets/monkey-walk-right.png");
-
 
         textureMap = new HashMap<>();
 
-        for (String filePath : texturesToLoad) {
+        //Iterating over all Texture paths
+        for (String filePath : gameConstants.getTexturesToLoad()) {
             String[] pathHierarchy = filePath.split("/");
             String key = pathHierarchy[pathHierarchy.length - 1].split("\\.")[0];
 
-            textureMap.put(key, loadTextureFromResource(filePath));
+            //Forward slash is expected to be as the first char when loading from resources, if not present trying to load as an external file
+            if (filePath.charAt(0) == '/') {
+                textureMap.put(key, loadTextureFromResource(filePath));
+            }
+            else {
+                textureMap.put(key, loadTextureFromFile(filePath));
+            }
         }
-
-        //textureMap.forEach((key, value)->System.out.println(key + ": " + value));
     }
 
     public Texture getTexture(String key) {
         return textureMap.get(key);
     }
 
+    private Texture loadTexture(InputStream input) throws IOException {
+        BufferedImage image = ImageIO.read(input);
 
-    private Texture loadTextureFromResource(String filePath) {
-        try {
-            return new Texture(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/" + filePath))));
+        if (image == null) {
+            throw new IOException("Failed to load Texture: image format probably unsupported!");
         }
-        catch (IOException | NullPointerException e) {
-            System.out.println("Failed to load resource: " + e.getMessage());
+
+        return new Texture(image);
+    }
+
+    private Texture loadTextureFromResource(String resourcePath) {
+        try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
+            if (is == null) {
+                System.out.println("Resource was not found: " + resourcePath);
+                return DEFAULT_TEXTURE;
+            }
+
+            return loadTexture(is);
+        }
+        catch (IOException e) {
+            System.out.println("Failed to load resource: " + resourcePath + " - " + e.getMessage());
         }
 
         return DEFAULT_TEXTURE;
     }
 
-    private BufferedImage loadBufferedImageFromResource(String filePath) {
-        try {
-            return ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/" + filePath)));
+    private Texture loadTextureFromFile(String filePath) {
+        Path path = Path.of(filePath);
+
+        try (InputStream is = Files.newInputStream(path)) {
+            return loadTexture(is);
         }
-        catch (IOException | NullPointerException e) {
-            System.out.println("Failed to load resource: " + e.getMessage());
+        catch (IOException e) {
+            System.out.println("Failed to load file: " + filePath + " - " + e.getMessage());
+            return DEFAULT_TEXTURE;
         }
 
-        return DEFAULT_TEXTURE.getImage();
     }
 }

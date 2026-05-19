@@ -1,53 +1,45 @@
 package game.background;
 
 import game.Texture;
+import game.data.GameData;
 
 import java.awt.*;
 import java.util.ArrayDeque;
-import java.util.Random;
 
 public class AnimatedBackground {
+    private final Dimension frameSize;
+
+    private final AnimatedBackgroundData data;
+
     private final Texture bg;
 
-    private final int targetUPS;
-
-    private final int targetAnimFPS;
 
     private int updateCounter;
     private final int frameDelay; //updates needed to switch frame
 
-    private final Dimension frameSize;
-
     private final ArrayDeque<BackgroundDroplet> droplets;
 
-    private final Color dropletColor;
-    private final Color topColor;
-    private final Color bottomColor;
 
-    private final Random rnd;
 
-    public AnimatedBackground(Dimension size, Random rnd, int targetUPS) {
-        this.targetUPS = targetUPS;
-
-        this.targetAnimFPS = 20;
+    public AnimatedBackground(GameData gameData, Dimension size) {
+        //TODO: DO something idk
+        data = new AnimatedBackgroundData();
 
         this.updateCounter = 0;
-        this.frameDelay = targetUPS / targetAnimFPS;
+        this.frameDelay = gameData.getConstants().getTargetUPS() / data.getTargetAnimFPS();
 
         this.frameSize = size;
 
-        this.rnd = rnd;
 
         droplets = new ArrayDeque<>();
 
-        dropletColor = new Color(0, 255, 165, 30);
-        topColor = new Color(20, 180, 145, 255);
-        bottomColor = new Color(5, 105, 80, 255);
+        //TODO: maybe with this too
 
-        bg = new Texture(new LinearVerticalGradientImage(size, topColor, bottomColor));
+
+        bg = new Texture(new LinearVerticalGradientImage(frameSize, data.getTopColor(), data.getBottomColor()));
     }
 
-    public void update() {
+    public void update(GameData gameData) {
         updateCounter++;
 
         if (updateCounter >= frameDelay) {
@@ -59,7 +51,7 @@ public class AnimatedBackground {
             }
 
             //Adding droplets
-            droplets.add(new BackgroundDroplet(frameSize, rnd, dropletColor));
+            droplets.add(new BackgroundDroplet(gameData, data, frameSize));
 
             //Updating droplets
             for (BackgroundDroplet droplet : droplets) {
@@ -68,6 +60,7 @@ public class AnimatedBackground {
         }
     }
 
+    //TODO: Fix ConcurrentModificationException
     public void draw(Graphics2D gfx) {
         gfx.drawImage(bg.getImage(), 0,  0, bg.getWidth(), bg.getHeight(), null);
 

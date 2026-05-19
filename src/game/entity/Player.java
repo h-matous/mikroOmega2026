@@ -3,14 +3,13 @@ package game.entity;
 import game.KeyHandler;
 import game.TextureManager;
 import game.Vector2i;
+import game.data.GameData;
 
 import java.awt.*;
 import java.util.HashMap;
 
 public class Player extends Entity {
-    KeyHandler keyH;
-
-    private int maxVel;
+    private int maxWalkingVel;
 
     private enum Direction {
         IDLE(new Vector2i(0, 0)),
@@ -36,34 +35,38 @@ public class Player extends Entity {
     private Animation currentAnimation;
 
 
-    public Player(int scale, KeyHandler keyH, TextureManager texMngr, int targetUPS) {
-        this.keyH = keyH;
+    public Player(GameData gameData) {
 
-        setDefaultValues(scale, texMngr);
+        setDefaultValues(gameData);
 
-        initializeAnimationMap(texMngr, targetUPS);
+        initializeAnimationMap(gameData);
     }
 
-    public void setDefaultValues(int scale, TextureManager texMngr) {
+    public void setDefaultValues(GameData gameData) {
         this.pos = new Vector2i(100, 100);
-        this.scale = scale;
-        this.size = new Vector2i(texMngr.getTexture("monkey-idle").getWidth());
+        this.scale = gameData.getConstants().getScale();
+        this.size = new Vector2i(gameData.getTexMngr().getTexture("monkey-idle").getWidth());
         this.vel = new Vector2i();
 
-        this.collider = new Collider(new Vector2i(20, 26), new Vector2i(24, 38));
+        this.collider = gameData.getConstants().getPlayerCollider();
 
         direction = Direction.IDLE;
 
-        this.maxVel = 4;
+        this.maxWalkingVel = 4;
 
         this.rotation = 0;
     }
 
 
 
-    public void initializeAnimationMap(TextureManager texMngr, int targetUPS) {
+    public void initializeAnimationMap(GameData gameData) {
         animationMap = new HashMap<>();
 
+        TextureManager texMngr = gameData.getTexMngr();
+        int targetUPS = gameData.getConstants().getTargetUPS();
+
+
+        //TODO: DO something idk
         animationMap.put(Direction.IDLE, new Animation(texMngr.getTexture("monkey-idle"), 1, 1, targetUPS));
         animationMap.put(Direction.UP, new Animation(texMngr.getTexture("monkey-idle"), 1, 1, targetUPS));
         animationMap.put(Direction.DOWN, new Animation(texMngr.getTexture("monkey-idle"), 1, 1, targetUPS));
@@ -76,11 +79,13 @@ public class Player extends Entity {
 
 
     @Override
-    public void update() {
-        super.update();
+    public void update(GameData gameData) {
+        super.update(gameData);
 
         direction = Direction.IDLE;
         vel.setBoth(0 ,0);
+
+        KeyHandler keyH = gameData.getKeyHandler();
 
         if (keyH.isUpPressed()) {
             direction = Direction.UP;
@@ -101,7 +106,7 @@ public class Player extends Entity {
 
         if (vel.getX() == 0) direction = Direction.IDLE;
 
-        vel.multiply(maxVel);
+        vel.multiply(maxWalkingVel);
 
         pos.add(vel);
 
