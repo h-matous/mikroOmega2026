@@ -60,7 +60,6 @@ public class AnimatedBackground {
         }
     }
 
-    //TODO: Fix ConcurrentModificationException
     public void draw(Graphics2D gfx) {
         gfx.drawImage(bg.getImage(), 0,  0, bg.getWidth(), bg.getHeight(), null);
 

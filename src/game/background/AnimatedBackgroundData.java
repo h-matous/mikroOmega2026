@@ -23,12 +23,8 @@ public class AnimatedBackgroundData {
         this.topColor = new Color(20, 180, 145, 255);
         this.bottomColor = new Color(5, 105, 80, 255);
 
-        //this.squareCount = 20;
-        //this.squareLen = 32;
-
-        //TODO: For debugging, original is ↑ up above
-        this.squareCount = 959;
-        this.squareLen = 959;
+        this.squareCount = 20;
+        this.squareLen = 32;
     }
 
     public int getTargetAnimFPS() {

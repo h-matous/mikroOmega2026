@@ -6,20 +6,24 @@ import game.entity.Collider;
 
 
 public class GameConstants {
-    private final int targetUPS;
+    private int targetUPS;
 
-    private final int scale;
+    private int scale;
 
-    private final Vector2d gameScreenSizePercentage;
-    private final Vector2d titleScreenSizePercentage;
+    private Vector2d gameScreenSizePercentage;
+    private Vector2d titleScreenSizePercentage;
 
     //Textures
-    private final String[] texturesToLoad;
+    private String[] texturesToLoad;
 
-    private final Collider playerCollider;
+    private Collider playerCollider;
 
 
     public GameConstants() {
+        defaultInstance();
+    }
+
+    public void defaultInstance() {
         //Target Updates Per Second
         this.targetUPS = 100;
 

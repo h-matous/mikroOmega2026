@@ -4,6 +4,7 @@ import game.data.GameData;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 
 public class Canvas2D extends JPanel implements Runnable {
@@ -13,13 +14,18 @@ public class Canvas2D extends JPanel implements Runnable {
 
     private Thread gameThread;
 
+    //Double buffering
+    private BufferedImage frontBuffer;
+    private BufferedImage backBuffer;
+
+    private final Object bufferLock;
 
     public Canvas2D(GameData gameData, GameLogic gameLogic, Dimension frameSize) {
         super();
 
         this.targetUPS = gameData.getConstants().getTargetUPS();
 
-        this.setDoubleBuffered(true);
+        this.setDoubleBuffered(false);
         this.setPreferredSize(frameSize);
         this.setBackground(Color.BLACK);
 
@@ -28,9 +34,13 @@ public class Canvas2D extends JPanel implements Runnable {
 
         this.addKeyListener(gameData.getKeyHandler());
         this.setFocusable(true);
+
+        frontBuffer = new BufferedImage(frameSize.width, frameSize.height, BufferedImage.TYPE_INT_ARGB);
+        backBuffer = new BufferedImage(frameSize.width, frameSize.height, BufferedImage.TYPE_INT_ARGB);
+
+        bufferLock = new Object();
     }
 
-    //TODO: Fix by rendering to a BufferedImage first and passing that to paintComponent (ConcurrentModificationException in ArrayDeque)
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
@@ -58,11 +68,17 @@ public class Canvas2D extends JPanel implements Runnable {
             //Fixed timestep
             while (accumulator >= updateInterval) {
                 accumulator = accumulator - updateInterval;
+
                 update();
             }
 
+            renderFrame();
+
             this.repaint();
 
+
+            //Flush pending graphics drawing operations to the screen immediately
+            Toolkit.getDefaultToolkit().sync();
 
             try {
                 Thread.sleep(1);
@@ -77,16 +93,37 @@ public class Canvas2D extends JPanel implements Runnable {
         gameLogic.update();
     }
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        Graphics2D gfx = (Graphics2D) g;
+    public void renderFrame() {
+        Graphics2D gfx = backBuffer.createGraphics();
 
         gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        gfx.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+
+        gfx.setColor(Color.BLACK);
+        gfx.fillRect(0, 0, backBuffer.getWidth(), backBuffer.getHeight());
 
         gameLogic.paint(gfx);
 
         gfx.dispose();
+
+        //Buffer swapping
+        synchronized (bufferLock) {
+            BufferedImage temp = frontBuffer;
+            frontBuffer = backBuffer;
+            backBuffer = temp;
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        final BufferedImage renderedImage;
+
+        synchronized (bufferLock) {
+            renderedImage = frontBuffer;
+        }
+
+        g.drawImage(renderedImage, 0, 0, null);
     }
 }

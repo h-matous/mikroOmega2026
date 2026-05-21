@@ -18,7 +18,7 @@ public class BackgroundDroplet {
 
     private final int[] squareSizes;
 
-    //TODO: Fix
+
     public BackgroundDroplet(GameData gameData, AnimatedBackgroundData data, Dimension BGsize) {
         this.BGsize = BGsize;
         this.data = data;
