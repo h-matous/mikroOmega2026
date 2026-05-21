@@ -1,4 +1,4 @@
-package game;
+package game.texture;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

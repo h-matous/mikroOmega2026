@@ -1,7 +1,7 @@
 package game.data;
 
-import game.KeyHandler;
-import game.TextureManager;
+import game.utilities.KeyHandler;
+import game.texture.TextureManager;
 
 import java.awt.*;
 import java.util.Random;

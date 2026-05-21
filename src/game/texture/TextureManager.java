@@ -1,8 +1,9 @@
-package game;
+package game.texture;
 
 import game.data.GameConstants;
 
 import javax.imageio.ImageIO;
+import javax.management.openmbean.InvalidKeyException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -62,7 +63,11 @@ public class TextureManager {
     }
 
     public Texture getTexture(String key) {
-        return textureMap.get(key);
+        if (textureMap.containsKey(key)) {
+            return textureMap.get(key);
+        }
+
+        throw new InvalidKeyException("Texture name doesn't exist: " + key);
     }
 
     private Texture loadTexture(InputStream input) throws IOException {

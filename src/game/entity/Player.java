@@ -1,8 +1,8 @@
 package game.entity;
 
-import game.KeyHandler;
-import game.TextureManager;
-import game.Vector2i;
+import game.utilities.KeyHandler;
+import game.texture.TextureManager;
+import game.utilities.Vector2i;
 import game.data.GameData;
 
 import java.awt.*;

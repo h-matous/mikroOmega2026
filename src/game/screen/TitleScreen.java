@@ -1,30 +1,24 @@
-package game.screens;
+package game.screen;
 
 import game.Game;
-import game.VisibilityController;
+import game.canvas.TitleCanvas2D;
+import game.data.GameData;
 
 import javax.swing.*;
 import java.awt.*;
 
 
-public class TitleScreen extends JFrame implements VisibilityController {
-    private final Dimension frameDimension;
+public class TitleScreen extends RenderScreen {
 
-    private final Game game;
+    public TitleScreen(GameData gameData, Game game) {
+        super(gameData, new TitleCanvas2D(gameData));
 
-    public TitleScreen(Game game) {
-        super();
-
-        this.game = game;
-
-        frameDimension = new Dimension(800, 600);
-
-        initialize();
+        initialize(game);
     }
 
 
-    public void initialize() {
-        Panel panel = new Panel();
+    public void initialize(Game game) {
+        TitleCanvas2D panel = new TitleCanvas2D(gameData);
 
         panel.setLayout(new BorderLayout());
 
@@ -58,7 +52,7 @@ public class TitleScreen extends JFrame implements VisibilityController {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.setTitle("Monkey Banana Catch!");
-        this.setPreferredSize(frameDimension);
+        this.setPreferredSize(gameData.getTitleScreenSize());
 
         this.pack();
 

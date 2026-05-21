@@ -1,8 +1,8 @@
 package game;
 
 import game.data.GameData;
-import game.screens.GameScreen;
-import game.screens.TitleScreen;
+import game.screen.GameScreen;
+import game.screen.TitleScreen;
 
 import javax.swing.*;
 
@@ -23,7 +23,7 @@ public class Game {
 
         gameLogic = new GameLogic(gameData);
 
-        titleScreen = new TitleScreen(this);
+        titleScreen = new TitleScreen(gameData, this);
         gameScreen = new GameScreen(gameData, gameLogic);
     }
 

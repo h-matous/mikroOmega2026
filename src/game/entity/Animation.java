@@ -1,6 +1,6 @@
 package game.entity;
 
-import game.Texture;
+import game.texture.Texture;
 
 public class Animation {
     private final Texture[] frames;

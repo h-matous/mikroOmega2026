@@ -1,7 +1,8 @@
 package game.data;
 
-import game.Vector2d;
-import game.Vector2i;
+import game.utilities.Vector2d;
+import game.utilities.Vector2i;
+import game.background.AnimatedBackgroundData;
 import game.entity.Collider;
 
 
@@ -17,6 +18,11 @@ public class GameConstants {
     private String[] texturesToLoad;
 
     private Collider playerCollider;
+
+
+
+    //Background
+    private AnimatedBackgroundData animatedBackgroundData;
 
 
     public GameConstants() {
@@ -46,6 +52,10 @@ public class GameConstants {
 
         //Banana Colliders
         //TODO: Colliders for bananas ↑
+
+
+        //Background
+        this.animatedBackgroundData = new AnimatedBackgroundData();
     }
 
     public int getTargetUPS() {
@@ -71,5 +81,10 @@ public class GameConstants {
 
     public Collider getPlayerCollider() {
         return playerCollider;
+    }
+
+
+    public AnimatedBackgroundData getAnimatedBackgroundData() {
+        return animatedBackgroundData;
     }
 }

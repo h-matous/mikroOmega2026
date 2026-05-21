@@ -1,8 +1,8 @@
 package game.entity;
 
-import game.Texture;
+import game.texture.Texture;
 
-import game.Vector2i;
+import game.utilities.Vector2i;
 import game.data.GameData;
 
 import java.awt.*;
@@ -10,11 +10,9 @@ import java.awt.*;
 public class Banana extends Entity {
     private Vector2i maxFallingVel;
 
-    Texture texture;
-
+    private Texture texture;
 
     public Banana(GameData gameData) {
-
         setDefaultValues(gameData);
     }
 

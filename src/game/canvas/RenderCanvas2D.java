@@ -1,4 +1,4 @@
-package game;
+package game.canvas;
 
 import game.data.GameData;
 
@@ -7,12 +7,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
-public class Canvas2D extends JPanel implements Runnable {
+public abstract class RenderCanvas2D extends JPanel implements Runnable {
     private final int targetUPS;
 
-    private final GameLogic gameLogic;
-
-    private Thread gameThread;
+    protected final GameData gameData;
 
     //Double buffering
     private BufferedImage frontBuffer;
@@ -20,16 +18,18 @@ public class Canvas2D extends JPanel implements Runnable {
 
     private final Object bufferLock;
 
-    public Canvas2D(GameData gameData, GameLogic gameLogic, Dimension frameSize) {
+    private volatile boolean running;
+
+    public RenderCanvas2D(GameData gameData, Dimension frameSize) {
         super();
 
-        this.targetUPS = gameData.getConstants().getTargetUPS();
+        this.gameData = gameData;
+
+        this.targetUPS = this.gameData.getConstants().getTargetUPS();
 
         this.setDoubleBuffered(false);
         this.setPreferredSize(frameSize);
         this.setBackground(Color.BLACK);
-
-        this.gameLogic = gameLogic;
 
 
         this.addKeyListener(gameData.getKeyHandler());
@@ -39,12 +39,10 @@ public class Canvas2D extends JPanel implements Runnable {
         backBuffer = new BufferedImage(frameSize.width, frameSize.height, BufferedImage.TYPE_INT_ARGB);
 
         bufferLock = new Object();
+
+        running = false;
     }
 
-    public void startGameThread() {
-        gameThread = new Thread(this);
-        gameThread.start();
-    }
 
 
     @Override
@@ -58,7 +56,7 @@ public class Canvas2D extends JPanel implements Runnable {
         long currentTime; //current time in nanoseconds
 
 
-        while (gameThread != null) {
+        while (running) {
             currentTime = System.nanoTime();
             deltaTime = currentTime - lastTime;
             lastTime = currentTime;
@@ -89,9 +87,10 @@ public class Canvas2D extends JPanel implements Runnable {
         }
     }
 
-    public void update() {
-        gameLogic.update();
-    }
+    public abstract void update();
+
+    public abstract void draw(Graphics2D gfx);
+
 
     public void renderFrame() {
         Graphics2D gfx = backBuffer.createGraphics();
@@ -102,7 +101,7 @@ public class Canvas2D extends JPanel implements Runnable {
         gfx.setColor(Color.BLACK);
         gfx.fillRect(0, 0, backBuffer.getWidth(), backBuffer.getHeight());
 
-        gameLogic.paint(gfx);
+        draw(gfx);
 
         gfx.dispose();
 
@@ -125,5 +124,13 @@ public class Canvas2D extends JPanel implements Runnable {
         }
 
         g.drawImage(renderedImage, 0, 0, null);
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 }

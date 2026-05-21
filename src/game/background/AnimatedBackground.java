@@ -1,6 +1,6 @@
 package game.background;
 
-import game.Texture;
+import game.texture.Texture;
 import game.data.GameData;
 
 import java.awt.*;
@@ -20,24 +20,20 @@ public class AnimatedBackground {
     private final ArrayDeque<BackgroundDroplet> droplets;
 
 
-
     public AnimatedBackground(GameData gameData, Dimension size) {
         //TODO: DO something idk
-        data = new AnimatedBackgroundData();
+        data = gameData.getConstants().getAnimatedBackgroundData();
 
         this.updateCounter = 0;
         this.frameDelay = gameData.getConstants().getTargetUPS() / data.getTargetAnimFPS();
 
         this.frameSize = size;
 
-
         droplets = new ArrayDeque<>();
-
-        //TODO: maybe with this too
-
 
         bg = new Texture(new LinearVerticalGradientImage(frameSize, data.getTopColor(), data.getBottomColor()));
     }
+
 
     public void update(GameData gameData) {
         updateCounter++;
@@ -59,6 +55,7 @@ public class AnimatedBackground {
             }
         }
     }
+
 
     public void draw(Graphics2D gfx) {
         gfx.drawImage(bg.getImage(), 0,  0, bg.getWidth(), bg.getHeight(), null);

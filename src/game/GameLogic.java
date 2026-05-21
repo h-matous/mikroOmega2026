@@ -17,6 +17,7 @@ public class GameLogic {
     private final AnimatedBackground bg;
 
 
+
     public GameLogic(GameData gameData) {
         this.gameData = gameData;
 
@@ -39,7 +40,7 @@ public class GameLogic {
         }
     }
 
-    public void paint(Graphics2D gfx) {
+    public void draw(Graphics2D gfx) {
         this.bg.draw(gfx);
         this.score.draw(gfx);
         this.exampleBanana.draw(gfx);

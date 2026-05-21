@@ -1,36 +1,33 @@
-package game.screens;
+package game.screen;
 
-import game.Canvas2D;
+import game.canvas.GameCanvas2D;
 import game.GameLogic;
-import game.VisibilityController;
 import game.data.GameData;
 
 import javax.swing.*;
 
-public class GameScreen extends JFrame implements VisibilityController {
-    private final GameData gameData;
+public class GameScreen extends RenderScreen {
     private final GameLogic gameLogic;
-
-    private Canvas2D canvas2D;
 
 
     public GameScreen(GameData gameData, GameLogic gameLogic) {
-        super();
+        super(gameData, new GameCanvas2D(gameData, gameLogic));
 
-        this.gameData = gameData;
+
         this.gameLogic = gameLogic;
 
         initialize();
     }
 
     private void initialize() {
-        canvas2D = new Canvas2D(gameData, gameLogic, gameData.getGameScreenSize());
+        renderCanvas2D = new GameCanvas2D(gameData, gameLogic);
 
-        this.setContentPane(canvas2D);
+        this.setContentPane(renderCanvas2D);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.setTitle("Monkey Banana Catch!");
+        this.setPreferredSize(gameData.getGameScreenSize());
 
         this.setResizable(false);
         this.pack();
@@ -41,7 +38,4 @@ public class GameScreen extends JFrame implements VisibilityController {
     }
 
 
-    public void startGameThread() {
-        canvas2D.startGameThread();
-    }
 }

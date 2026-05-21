@@ -1,6 +1,6 @@
 package game.entity;
 
-import game.Vector2i;
+import game.utilities.Vector2i;
 import game.data.GameData;
 
 import java.awt.*;
