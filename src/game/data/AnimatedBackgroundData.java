@@ -1,4 +1,4 @@
-package game.background;
+package game.data;
 
 import java.awt.*;
 

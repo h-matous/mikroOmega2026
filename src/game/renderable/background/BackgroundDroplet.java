@@ -1,11 +1,13 @@
-package game.background;
+package game.renderable.background;
 
+import game.renderable.DrawableAndUpdatable;
+import game.data.AnimatedBackgroundData;
 import game.data.GameData;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class BackgroundDroplet {
+public class BackgroundDroplet implements DrawableAndUpdatable {
 
     private final Dimension BGsize;
 
@@ -47,11 +49,13 @@ public class BackgroundDroplet {
         return (index + 1) * (data.getSquareLen() / data.getSquareCount());
     }
 
-    public void update() {
-        squares.add(squares.removeFirst() + data.getSquareLen()  * data.getSquareCount());
+    @Override
+    public void update(GameData gameData) {
+        squares.add(squares.removeFirst() + data.getSquareLen() * data.getSquareCount());
     }
 
-    public void draw(Graphics2D gfx) {
+    @Override
+    public void draw(Graphics2D gfx, GameData gameData) {
         gfx.setColor(data.getDropletColor());
 
         for (int i = 0; i < squares.size(); i++) {

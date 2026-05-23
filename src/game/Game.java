@@ -1,6 +1,7 @@
 package game;
 
 import game.data.GameData;
+import game.renderable.GameLogic;
 import game.screen.GameScreen;
 import game.screen.TitleScreen;
 
@@ -23,7 +24,7 @@ public class Game {
 
         gameLogic = new GameLogic(gameData);
 
-        titleScreen = new TitleScreen(gameData, this);
+        titleScreen = new TitleScreen(this, gameData);
         gameScreen = new GameScreen(gameData, gameLogic);
     }
 
@@ -32,13 +33,17 @@ public class Game {
         //screens[0].show();
         titleScreen.setVisible(true);
         gameScreen.setVisible(false);
+
+        titleScreen.startThread();
     }
 
     public void showGame() {
+        titleScreen.stopThread();
+
         gameScreen.setVisible(true);
         titleScreen.setVisible(false);
 
-        gameScreen.startGameThread();
+        gameScreen.startThread();
     }
 
     private static void setLookAndFeel() {

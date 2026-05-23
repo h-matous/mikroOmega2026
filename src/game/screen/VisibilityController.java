@@ -1,4 +1,4 @@
-package game;
+package game.screen;
 
 public interface VisibilityController {
     abstract void show();

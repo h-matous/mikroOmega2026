@@ -1,5 +1,6 @@
-package game.entity;
+package game.renderable.entity;
 
+import game.utilities.Animation;
 import game.utilities.KeyHandler;
 import game.texture.TextureManager;
 import game.utilities.Vector2i;
@@ -116,8 +117,8 @@ public class Player extends Entity {
     }
 
     @Override
-    public void draw(Graphics2D gfx) {
-        super.draw(gfx);
+    public void draw(Graphics2D gfx, GameData gameData) {
+        super.draw(gfx, gameData);
 
         gfx.drawImage(currentAnimation.getCurrentFrame().getImage(), pos.getX(), pos.getY(), size.getX() * scale, size.getY() * scale, null);
     }

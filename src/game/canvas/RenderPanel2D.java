@@ -1,5 +1,6 @@
 package game.canvas;
 
+import game.renderable.DrawableAndUpdatable;
 import game.data.GameData;
 
 import javax.swing.*;
@@ -7,7 +8,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
-public abstract class RenderCanvas2D extends JPanel implements Runnable {
+public class RenderPanel2D extends JPanel implements Runnable {
     private final int targetUPS;
 
     protected final GameData gameData;
@@ -20,7 +21,9 @@ public abstract class RenderCanvas2D extends JPanel implements Runnable {
 
     private volatile boolean running;
 
-    public RenderCanvas2D(GameData gameData, Dimension frameSize) {
+    private final DrawableAndUpdatable drawableAndUpdatable;
+
+    public RenderPanel2D(GameData gameData, Dimension frameSize, DrawableAndUpdatable drawableAndUpdatable) {
         super();
 
         this.gameData = gameData;
@@ -41,6 +44,8 @@ public abstract class RenderCanvas2D extends JPanel implements Runnable {
         bufferLock = new Object();
 
         running = false;
+
+        this.drawableAndUpdatable = drawableAndUpdatable;
     }
 
 
@@ -87,9 +92,13 @@ public abstract class RenderCanvas2D extends JPanel implements Runnable {
         }
     }
 
-    public abstract void update();
+    public void update() {
+        drawableAndUpdatable.update(gameData);
+    }
 
-    public abstract void draw(Graphics2D gfx);
+    public void draw(Graphics2D gfx) {
+        drawableAndUpdatable.draw(gfx, gameData);
+    }
 
 
     public void renderFrame() {

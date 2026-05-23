@@ -9,7 +9,7 @@ import java.util.Random;
 public class GameData {
     private final GameConstants gameConstants;
 
-    private final Dimension screenSize;
+    private final Dimension displayScreenSize;
     private final Dimension gameScreenSize;
     private final Dimension titleScreenSize;
 
@@ -20,25 +20,35 @@ public class GameData {
 
     private final Random rnd;
 
+    private final Font labelFont;
+    private final Font scoreFont;
+
 
     public GameData() {
         this.gameConstants = new GameConstants();
 
         DisplayMode dm = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode();
-        this.screenSize = new Dimension(dm.getWidth(), dm.getHeight());
+        this.displayScreenSize = new Dimension(dm.getWidth(), dm.getHeight());
 
-        this.gameScreenSize = new Dimension((int) (screenSize.width * gameConstants.getGameScreenSizePercentage().getX()), (int) (screenSize.height * gameConstants.getGameScreenSizePercentage().getY()));
-        this.titleScreenSize = new Dimension((int) (screenSize.width * gameConstants.getTitleScreenSizePercentage().getX()), (int) (screenSize.height * gameConstants.getTitleScreenSizePercentage().getY()));
+        this.gameScreenSize = new Dimension((int) (displayScreenSize.width * gameConstants.getGameScreenSizePercentage().getX()), (int) (displayScreenSize.height * gameConstants.getGameScreenSizePercentage().getY()));
+        this.titleScreenSize = new Dimension((int) (displayScreenSize.width * gameConstants.getTitleScreenSizePercentage().getX()), (int) (displayScreenSize.height * gameConstants.getTitleScreenSizePercentage().getY()));
 
         this.texMngr = new TextureManager(gameConstants);
 
         this.keyHandler = new KeyHandler();
 
         this.rnd = new Random();
+
+        this.labelFont = new Font("Arial", Font.BOLD, titleScreenSize.width / 30);
+        this.scoreFont = new Font("Arial", Font.BOLD, gameScreenSize.width / 12);
     }
 
     public GameConstants getConstants() {
         return gameConstants;
+    }
+
+    public Dimension getDisplayScreenSize() {
+        return displayScreenSize;
     }
 
     public Dimension getGameScreenSize() {
@@ -59,5 +69,13 @@ public class GameData {
 
     public Random getRnd() {
         return rnd;
+    }
+
+    public Font getLabelFont() {
+        return labelFont;
+    }
+
+    public Font getScoreFont() {
+        return scoreFont;
     }
 }

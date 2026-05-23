@@ -1,12 +1,14 @@
-package game.entity;
+package game.renderable.entity;
 
+import game.renderable.DrawableAndUpdatable;
+import game.data.Collider;
 import game.utilities.Vector2i;
 import game.data.GameData;
 
 import java.awt.*;
 
 
-public abstract class Entity {
+public abstract class Entity implements DrawableAndUpdatable {
     protected Vector2i pos;
     protected int scale;
     protected Vector2i size;
@@ -51,12 +53,13 @@ public abstract class Entity {
         return false;
     }
 
-
+    @Override
     public void update(GameData gameData) {
 
     }
 
-    public void draw(Graphics2D gfx) {
+    @Override
+    public void draw(Graphics2D gfx, GameData gameData) {
         if (showBounds) {
             this.drawBounds(gfx);
         }

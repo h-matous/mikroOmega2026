@@ -1,13 +1,14 @@
-package game;
+package game.renderable;
+
+import game.data.GameData;
 
 import java.awt.*;
 
 
-public class Score {
+public class Score implements DrawableAndUpdatable {
     private Dimension frameSize;
     private int score;
 
-    private Font font;
 
     private Color color;
 
@@ -15,7 +16,6 @@ public class Score {
         this.frameSize = frameSize;
         score = 0;
 
-        font = new Font("Arial", Font.BOLD, frameSize.width / 12);
 
         this.color = Color.BLACK;
     }
@@ -30,8 +30,13 @@ public class Score {
         return score;
     }
 
-    public void draw(Graphics2D gfx) {
-        gfx.setFont(font);
+    @Override
+    public void update(GameData gameData) {
+
+    }
+
+    public void draw(Graphics2D gfx, GameData gameData) {
+        gfx.setFont(gameData.getScoreFont());
 
         String str = toString();
 

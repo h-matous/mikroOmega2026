@@ -1,7 +1,7 @@
 package game.screen;
 
-import game.canvas.GameCanvas2D;
-import game.GameLogic;
+import game.renderable.GameLogic;
+import game.canvas.RenderPanel2D;
 import game.data.GameData;
 
 import javax.swing.*;
@@ -11,8 +11,7 @@ public class GameScreen extends RenderScreen {
 
 
     public GameScreen(GameData gameData, GameLogic gameLogic) {
-        super(gameData, new GameCanvas2D(gameData, gameLogic));
-
+        super(gameData, new RenderPanel2D(gameData, gameData.getGameScreenSize(), gameLogic));
 
         this.gameLogic = gameLogic;
 
@@ -20,9 +19,9 @@ public class GameScreen extends RenderScreen {
     }
 
     private void initialize() {
-        renderCanvas2D = new GameCanvas2D(gameData, gameLogic);
+        //renderCanvas2D = new GameCanvas2D(gameData, gameLogic);
 
-        this.setContentPane(renderCanvas2D);
+        this.setContentPane(renderPanel2D);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -36,6 +35,4 @@ public class GameScreen extends RenderScreen {
 
         this.setVisible(false);
     }
-
-
 }

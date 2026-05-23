@@ -1,4 +1,4 @@
-package game.entity;
+package game.data;
 
 import game.utilities.Vector2i;
 

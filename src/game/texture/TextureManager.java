@@ -18,7 +18,7 @@ public class TextureManager {
     private static Texture DEFAULT_TEXTURE;
 
     private static void initDefaultTexture() {
-        if (DEFAULT_TEXTURE == null) {
+        while (DEFAULT_TEXTURE == null) {
             final int width = 64;
             final int height = 64;
 
@@ -47,8 +47,10 @@ public class TextureManager {
 
         textureMap = new HashMap<>();
 
+        String[] texturesToLoad = gameConstants.getTexturesToLoad();
+
         //Iterating over all Texture paths
-        for (String filePath : gameConstants.getTexturesToLoad()) {
+        for (String filePath : texturesToLoad) {
             String[] pathHierarchy = filePath.split("/");
             String key = pathHierarchy[pathHierarchy.length - 1].split("\\.")[0];
 

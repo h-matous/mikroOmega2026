@@ -1,7 +1,10 @@
-package game.entity;
+package game.utilities;
 
 import game.texture.Texture;
 
+/**
+ * Acts as an animated spriteSheet Texture holder that can get updated to another frame, used for animated Entities (Player)
+ */
 public class Animation {
     private final Texture[] frames;
     private int currentFrame;

@@ -2,8 +2,6 @@ package game.data;
 
 import game.utilities.Vector2d;
 import game.utilities.Vector2i;
-import game.background.AnimatedBackgroundData;
-import game.entity.Collider;
 
 
 public class GameConstants {
@@ -43,10 +41,11 @@ public class GameConstants {
 
         //Textures
 
-        //When loading from reasources, forward slash is at the beginning of the path
+        //When loading from resources, forward slash is at the beginning of the path
         this.texturesToLoad = new String[] {"/assets/banana-1.png", "/assets/banana-2.png", "/assets/banana-3.png", "/assets/banana-4.png", "/assets/banana-5.png", "/assets/monkey-idle.png", "/assets/monkey-walk-left.png", "/assets/monkey-walk-right.png"};
 
         //Colliders
+
         //Player Collider
         this.playerCollider = new Collider(new Vector2i(20, 26), new Vector2i(24, 38));
 

@@ -1,12 +1,15 @@
-package game.background;
+package game.renderable.background;
 
+import game.renderable.DrawableAndUpdatable;
+import game.data.AnimatedBackgroundData;
+import game.texture.LinearVerticalGradientTexture;
 import game.texture.Texture;
 import game.data.GameData;
 
 import java.awt.*;
 import java.util.ArrayDeque;
 
-public class AnimatedBackground {
+public class AnimatedBackground implements DrawableAndUpdatable {
     private final Dimension frameSize;
 
     private final AnimatedBackgroundData data;
@@ -20,9 +23,8 @@ public class AnimatedBackground {
     private final ArrayDeque<BackgroundDroplet> droplets;
 
 
-    public AnimatedBackground(GameData gameData, Dimension size) {
-        //TODO: DO something idk
-        data = gameData.getConstants().getAnimatedBackgroundData();
+    public AnimatedBackground(GameData gameData, AnimatedBackgroundData data, Dimension size) {
+        this.data = data;
 
         this.updateCounter = 0;
         this.frameDelay = gameData.getConstants().getTargetUPS() / data.getTargetAnimFPS();
@@ -31,10 +33,10 @@ public class AnimatedBackground {
 
         droplets = new ArrayDeque<>();
 
-        bg = new Texture(new LinearVerticalGradientImage(frameSize, data.getTopColor(), data.getBottomColor()));
+        bg = new Texture(new LinearVerticalGradientTexture(frameSize, data.getTopColor(), data.getBottomColor()));
     }
 
-
+    @Override
     public void update(GameData gameData) {
         updateCounter++;
 
@@ -51,17 +53,18 @@ public class AnimatedBackground {
 
             //Updating droplets
             for (BackgroundDroplet droplet : droplets) {
-                droplet.update();
+                droplet.update(gameData);
             }
         }
     }
 
 
-    public void draw(Graphics2D gfx) {
+    @Override
+    public void draw(Graphics2D gfx, GameData gameData) {
         gfx.drawImage(bg.getImage(), 0,  0, bg.getWidth(), bg.getHeight(), null);
 
         for (BackgroundDroplet droplet : droplets) {
-            droplet.draw(gfx);
+            droplet.draw(gfx, gameData);
         }
     }
 }

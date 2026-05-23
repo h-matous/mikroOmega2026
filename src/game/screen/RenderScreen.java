@@ -1,37 +1,37 @@
 package game.screen;
 
-import game.canvas.RenderCanvas2D;
+import game.canvas.RenderPanel2D;
 import game.data.GameData;
 
 public class RenderScreen extends Screen {
     protected GameData gameData;
-    protected RenderCanvas2D renderCanvas2D;
+    protected RenderPanel2D renderPanel2D;
 
-    private Thread gameThread;
+    private Thread thread;
 
-    public RenderScreen(GameData gameData, RenderCanvas2D renderCanvas2D) {
+    public RenderScreen(GameData gameData, RenderPanel2D renderPanel2D) {
         super(gameData);
         this.gameData = gameData;
-        this.renderCanvas2D = renderCanvas2D;
+        this.renderPanel2D = renderPanel2D;
     }
 
-    public void startGameThread() {
-        if (renderCanvas2D.isRunning()) {
+    public void startThread() {
+        if (renderPanel2D.isRunning()) {
             return;
         }
 
-        renderCanvas2D.setRunning(true);
-        gameThread = new Thread(renderCanvas2D);
-        gameThread.start();
+        renderPanel2D.setRunning(true);
+        thread = new Thread(renderPanel2D);
+        thread.start();
     }
 
-    public void stopGameThread() {
-        renderCanvas2D.setRunning(false);
+    public void stopThread() {
+        renderPanel2D.setRunning(false);
 
         try {
-            if (gameThread != null) {
-                gameThread.join();
-                gameThread = null;
+            if (thread != null) {
+                thread.join();
+                thread = null;
             }
         }
         catch (InterruptedException e) {

@@ -1,6 +1,5 @@
 package game.screen;
 
-import game.VisibilityController;
 import game.data.GameData;
 
 import javax.swing.*;
