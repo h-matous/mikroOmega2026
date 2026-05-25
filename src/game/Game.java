@@ -1,7 +1,7 @@
 package game;
 
 import game.data.GameData;
-import game.renderable.GameLogic;
+import game.renderable.GameScene;
 import game.screen.GameScreen;
 import game.screen.TitleScreen;
 
@@ -13,19 +13,18 @@ public class Game {
     private final TitleScreen titleScreen;
     private final GameScreen gameScreen;
 
-    private final GameLogic gameLogic;
+    private final GameScene gameScene;
 
-    //TODO: Implement GameData and maybe even a Loader
 
     public Game() {
         setLookAndFeel();
 
         gameData = new GameData();
 
-        gameLogic = new GameLogic(gameData);
+        gameScene = new GameScene(gameData);
 
         titleScreen = new TitleScreen(this, gameData);
-        gameScreen = new GameScreen(gameData, gameLogic);
+        gameScreen = new GameScreen(gameData, gameScene);
     }
 
 

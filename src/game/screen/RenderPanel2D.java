@@ -1,4 +1,4 @@
-package game.canvas;
+package game.screen;
 
 import game.renderable.DrawableAndUpdatable;
 import game.data.GameData;
@@ -19,7 +19,7 @@ public class RenderPanel2D extends JPanel implements Runnable {
 
     private final Object bufferLock;
 
-    private volatile boolean running;
+    private boolean running;
 
     private final DrawableAndUpdatable drawableAndUpdatable;
 
@@ -128,7 +128,7 @@ public class RenderPanel2D extends JPanel implements Runnable {
 
         final BufferedImage renderedImage;
 
-        synchronized (bufferLock) {
+        synchronized(bufferLock) {
             renderedImage = frontBuffer;
         }
 

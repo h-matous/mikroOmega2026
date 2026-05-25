@@ -1,21 +1,18 @@
 package game.screen;
 
-import game.canvas.RenderPanel2D;
 import game.data.GameData;
 
 public class RenderScreen extends Screen {
-    protected GameData gameData;
     protected RenderPanel2D renderPanel2D;
 
-    private Thread thread;
+    private volatile Thread thread;
 
     public RenderScreen(GameData gameData, RenderPanel2D renderPanel2D) {
         super(gameData);
-        this.gameData = gameData;
         this.renderPanel2D = renderPanel2D;
     }
 
-    public void startThread() {
+    public synchronized void startThread() {
         if (renderPanel2D.isRunning()) {
             return;
         }
@@ -25,7 +22,7 @@ public class RenderScreen extends Screen {
         thread.start();
     }
 
-    public void stopThread() {
+    public synchronized void stopThread() {
         renderPanel2D.setRunning(false);
 
         try {

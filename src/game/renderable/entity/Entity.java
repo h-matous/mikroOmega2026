@@ -17,15 +17,13 @@ public abstract class Entity implements DrawableAndUpdatable {
     protected double rotation;
 
     protected Collider collider;
+    protected boolean colliderEnabled;
 
     protected static final boolean showBounds = true;
 
-    public Collider getCollider() {
-        return collider;
-    }
 
     public boolean collidesWith(Entity other) {
-        if (this.collider.isEnabled() && other.getCollider().isEnabled()) {
+        if (this.colliderEnabled && other.colliderEnabled) {
             //For axis X
             int thisX1 = this.pos.getX() + this.collider.getPos().getX() * this.scale;
             int otherX1 = other.pos.getX() + other.collider.getPos().getX() * other.scale;
@@ -102,10 +100,22 @@ public abstract class Entity implements DrawableAndUpdatable {
         //Collider rectangle outline
         gfx.drawRect(pos.getX() + collider.getPos().getX() * scale, pos.getY() + collider.getPos().getY() * scale, collider.getSize().getX() * scale, collider.getSize().getY() * scale);
 
-        if (this.collider.isEnabled()) {
+        if (this.colliderEnabled) {
             //Collider rectangle filling
             gfx.setColor(new Color(255, 0, 0, 80));
             gfx.fillRect(pos.getX() + collider.getPos().getX() * scale, pos.getY() + collider.getPos().getY() * scale, collider.getSize().getX() * scale, collider.getSize().getY() * scale);
         }
+    }
+
+    public void enableCollider() {
+        this.colliderEnabled = true;
+    }
+
+    public void disableCollider() {
+        this.colliderEnabled = false;
+    }
+
+    public boolean isColliderEnabled() {
+        return colliderEnabled;
     }
 }

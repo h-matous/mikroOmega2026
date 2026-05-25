@@ -2,7 +2,6 @@ package game.screen;
 
 import game.Game;
 import game.renderable.background.AnimatedBackground;
-import game.canvas.RenderPanel2D;
 import game.data.GameData;
 
 import javax.swing.*;

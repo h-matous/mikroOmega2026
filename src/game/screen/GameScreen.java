@@ -1,19 +1,18 @@
 package game.screen;
 
-import game.renderable.GameLogic;
-import game.canvas.RenderPanel2D;
+import game.renderable.GameScene;
 import game.data.GameData;
 
 import javax.swing.*;
 
 public class GameScreen extends RenderScreen {
-    private final GameLogic gameLogic;
+    private final GameScene gameScene;
 
 
-    public GameScreen(GameData gameData, GameLogic gameLogic) {
-        super(gameData, new RenderPanel2D(gameData, gameData.getGameScreenSize(), gameLogic));
+    public GameScreen(GameData gameData, GameScene gameScene) {
+        super(gameData, new RenderPanel2D(gameData, gameData.getGameScreenSize(), gameScene));
 
-        this.gameLogic = gameLogic;
+        this.gameScene = gameScene;
 
         initialize();
     }

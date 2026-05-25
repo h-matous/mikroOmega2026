@@ -3,7 +3,6 @@ package game.texture;
 import game.data.GameConstants;
 
 import javax.imageio.ImageIO;
-import javax.management.openmbean.InvalidKeyException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -12,20 +11,21 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class TextureManager {
     private static Texture DEFAULT_TEXTURE;
 
     private static void initDefaultTexture() {
-        while (DEFAULT_TEXTURE == null) {
+        if (DEFAULT_TEXTURE == null) {
             final int width = 64;
             final int height = 64;
 
             DEFAULT_TEXTURE = new Texture(new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB));
             DEFAULT_TEXTURE.setDefault(true);
 
-            Graphics gfx = DEFAULT_TEXTURE.getImage().getGraphics();
+            Graphics2D gfx = DEFAULT_TEXTURE.getImage().createGraphics();
 
             gfx.setColor(Color.BLACK);
             gfx.fillRect(0, 0, width, height);
@@ -47,7 +47,7 @@ public class TextureManager {
 
         textureMap = new HashMap<>();
 
-        String[] texturesToLoad = gameConstants.getTexturesToLoad();
+        List<String> texturesToLoad = gameConstants.getTexturesToLoad();
 
         //Iterating over all Texture paths
         for (String filePath : texturesToLoad) {
@@ -65,11 +65,13 @@ public class TextureManager {
     }
 
     public Texture getTexture(String key) {
-        if (textureMap.containsKey(key)) {
-            return textureMap.get(key);
+        Texture texture = textureMap.get(key);
+
+        if (texture != null) {
+            return texture;
         }
 
-        throw new InvalidKeyException("Texture name doesn't exist: " + key);
+        throw new IllegalArgumentException("Texture name doesn't exist: " + key);
     }
 
     private Texture loadTexture(InputStream input) throws IOException {

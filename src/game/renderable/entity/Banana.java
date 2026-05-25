@@ -1,6 +1,5 @@
 package game.renderable.entity;
 
-import game.data.Collider;
 import game.texture.Texture;
 
 import game.utilities.Vector2i;
@@ -9,38 +8,71 @@ import game.data.GameData;
 import java.awt.*;
 
 public class Banana extends Entity {
-    private Vector2i maxFallingVel;
+    private Vector2i fallingVel;
 
     private Texture texture;
+
+    //Represents how much score should the player receive after collecting this Banana
+    private int collectibleScore;
+
+    private int rotationSpeed;
 
     public Banana(GameData gameData) {
         setDefaultValues(gameData);
     }
 
-    //TODO: Implement Collider map and rotation pivot point map for each banana variant
     public void setDefaultValues(GameData gameData) {
-        this.texture = gameData.getTexMngr().getTexture("banana-1");
+        String id = "banana-" + gameData.getRnd().nextInt(1, gameData.getBananaVariationsCount() + 1);
+
+        this.texture = gameData.getTexMngr().getTexture(id);
+
+        //Random flip transformation
+        if (gameData.getRnd().nextBoolean()) {
+            this.texture = texture.getHorizontallyMirroredInstance();
+        }
+        if (gameData.getRnd().nextBoolean()) {
+            this.texture = texture.getVerticallyMirroredInstance();
+        }
+
 
         this.pos = new Vector2i(0, 0);
         this.scale = gameData.getConstants().getScale();
-        this.size = new Vector2i(texture.getWidth());
+        this.size = new Vector2i(texture.getWidth(), texture.getWidth());
         this.vel = new Vector2i();
 
-        //TODO: Do something IDK
-        this.collider = new Collider(new Vector2i(28, 23), new Vector2i(9, 14));
-        //TOOD: maybe this too
-        this.maxFallingVel = new Vector2i(0, 5);
+
+        this.collider = gameData.getConstants().getCollider(id);
+
+        this.fallingVel = gameData.getCurrentCollectibleFallingVel();
 
         this.rotation = 0;
+
+        this.colliderEnabled = true;
+
+        this.collectibleScore = gameData.getConstants().getCollectibleScore(id);
+
+        this.rotationSpeed = gameData.getConstants().getMaxCollectibleRotationSpeed();
+
+        //Random rotation direction
+        if (gameData.getRnd().nextBoolean()) {
+            this.rotationSpeed = -rotationSpeed;
+        }
+    }
+
+    public int getCollectibleScore() {
+        return collectibleScore;
+    }
+
+    public boolean hasFallenOffScreen(GameData gameData) {
+        return this.pos.getY() + this.collider.getPos().getY() > gameData.getGameScreenSize().height;
     }
 
     @Override
     public void update(GameData gameData) {
         super.update(gameData);
 
-        //TODO: Implement proper collisions and falling movement
-        pos.add(maxFallingVel);
-        rotation = rotation + 5;
+        pos.add(fallingVel);
+        rotation = rotation + rotationSpeed;
     }
 
     @Override

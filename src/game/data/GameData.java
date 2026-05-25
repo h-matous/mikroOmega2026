@@ -2,8 +2,10 @@ package game.data;
 
 import game.utilities.KeyHandler;
 import game.texture.TextureManager;
+import game.utilities.Vector2i;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Random;
 
 public class GameData {
@@ -23,6 +25,9 @@ public class GameData {
     private final Font labelFont;
     private final Font scoreFont;
 
+    private final int bananaVariationsCount;
+
+    private Vector2i currentCollectibleFallingVel;
 
     public GameData() {
         this.gameConstants = new GameConstants();
@@ -41,6 +46,10 @@ public class GameData {
 
         this.labelFont = new Font("Arial", Font.BOLD, titleScreenSize.width / 30);
         this.scoreFont = new Font("Arial", Font.BOLD, gameScreenSize.width / 12);
+
+        this.bananaVariationsCount = countBananaVariations();
+
+        this.currentCollectibleFallingVel = new Vector2i(0, gameConstants.getInitialCollectibleFallingVel());
     }
 
     public GameConstants getConstants() {
@@ -77,5 +86,17 @@ public class GameData {
 
     public Font getScoreFont() {
         return scoreFont;
+    }
+
+    private int countBananaVariations() {
+        return (int) gameConstants.getTexturesToLoad().stream().filter(x->Arrays.stream(x.split("/")).toList().getLast().startsWith("banana")).count();
+    }
+
+    public int getBananaVariationsCount() {
+        return bananaVariationsCount;
+    }
+
+    public Vector2i getCurrentCollectibleFallingVel() {
+        return currentCollectibleFallingVel;
     }
 }

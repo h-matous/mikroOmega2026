@@ -10,7 +10,6 @@ import java.awt.*;
 import java.util.HashMap;
 
 public class Player extends Entity {
-    private int maxWalkingVel;
 
     private enum Direction {
         IDLE(new Vector2i(0, 0)),
@@ -49,13 +48,13 @@ public class Player extends Entity {
         this.size = new Vector2i(gameData.getTexMngr().getTexture("monkey-idle").getWidth());
         this.vel = new Vector2i();
 
-        this.collider = gameData.getConstants().getPlayerCollider();
+        this.collider = gameData.getConstants().getCollider("player");
 
         direction = Direction.IDLE;
 
-        this.maxWalkingVel = 4;
-
         this.rotation = 0;
+
+        this.colliderEnabled = true;
     }
 
 
@@ -107,7 +106,7 @@ public class Player extends Entity {
 
         if (vel.getX() == 0) direction = Direction.IDLE;
 
-        vel.multiply(maxWalkingVel);
+        vel.multiply(gameData.getConstants().getMaxPlayerWalkingVel());
 
         pos.add(vel);
 

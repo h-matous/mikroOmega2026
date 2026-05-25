@@ -6,11 +6,11 @@ import java.awt.*;
 
 
 public class Score implements DrawableAndUpdatable {
-    private Dimension frameSize;
+    private final Dimension frameSize;
     private int score;
 
 
-    private Color color;
+    private final Color color;
 
     public Score(Dimension frameSize) {
         this.frameSize = frameSize;
@@ -26,15 +26,12 @@ public class Score implements DrawableAndUpdatable {
         }
     }
 
-    public int getScore() {
-        return score;
-    }
-
     @Override
     public void update(GameData gameData) {
 
     }
 
+    @Override
     public void draw(Graphics2D gfx, GameData gameData) {
         gfx.setFont(gameData.getScoreFont());
 
@@ -44,6 +41,10 @@ public class Score implements DrawableAndUpdatable {
 
         gfx.setColor(color);
         gfx.drawString(str,  frameSize.width / 2 - strWidth / 2, frameSize.height / 2);
+    }
+
+    public int getScore() {
+        return score;
     }
 
     @Override
