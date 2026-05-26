@@ -99,4 +99,8 @@ public class GameData {
     public Vector2i getCurrentCollectibleFallingVel() {
         return currentCollectibleFallingVel;
     }
+
+    public int playerPxOffGameScreenGround() {
+        return (int) (gameScreenSize.height * gameConstants.getPlayerPercentOfGameScreenHeightAboveGround() * 0.01);
+    }
 }

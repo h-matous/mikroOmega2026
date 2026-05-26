@@ -17,6 +17,7 @@ public class Banana extends Entity {
 
     private int rotationSpeed;
 
+
     public Banana(GameData gameData) {
         setDefaultValues(gameData);
     }
@@ -34,14 +35,14 @@ public class Banana extends Entity {
             this.texture = texture.getVerticallyMirroredInstance();
         }
 
+        this.collider = gameData.getConstants().getCollider(id);
 
-        this.pos = new Vector2i(0, 0);
         this.scale = gameData.getConstants().getScale();
-        this.size = new Vector2i(texture.getWidth(), texture.getWidth());
+        this.size = new Vector2i(texture.getWidth(), texture.getHeight());
+        this.pos = new Vector2i(gameData.getRnd().nextInt(-this.collider.getPos().getX() * this.scale, gameData.getGameScreenSize().width - this.size.getX() * this.scale + (this.size.getX() - this.collider.getPos().getX() - this.collider.getSize().getX()) * this.scale), -this.size.getY() * this.scale);
+
         this.vel = new Vector2i();
 
-
-        this.collider = gameData.getConstants().getCollider(id);
 
         this.fallingVel = gameData.getCurrentCollectibleFallingVel();
 
@@ -79,6 +80,11 @@ public class Banana extends Entity {
     public void draw(Graphics2D gfx, GameData gameData) {
         super.draw(gfx, gameData);
 
-        gfx.drawImage(texture.getRotatedInstance(rotation).getImage(), pos.getX(), pos.getY(), size.getX() * scale, size.getY() * scale, null);
+        if (!gameData.getConstants().isEntityRotationDisabled()) {
+            gfx.drawImage(this.texture.getRotatedInstance(rotation).getImage(), pos.getX(), pos.getY(), size.getX() * scale, size.getY() * scale, null);
+        }
+        else {
+            gfx.drawImage(this.texture.getImage(), pos.getX(), pos.getY(), size.getX() * scale, size.getY() * scale, null);
+        }
     }
 }

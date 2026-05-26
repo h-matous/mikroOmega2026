@@ -18,6 +18,10 @@ public class Texture {
     }
 
     public Texture getRotatedInstance(double angleDegrees) {
+        if (angleDegrees == 0) {
+            return new Texture(image);
+        }
+
         BufferedImage rotatedImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
 
         Graphics2D gfx = (Graphics2D) rotatedImage.getGraphics();

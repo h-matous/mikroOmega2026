@@ -10,7 +10,7 @@ public class GameScreen extends RenderScreen {
 
 
     public GameScreen(GameData gameData, GameScene gameScene) {
-        super(gameData, new RenderPanel2D(gameData, gameData.getGameScreenSize(), gameScene));
+        super(gameData, new RenderPanel2D(gameData, gameData.getGameScreenSize(), gameScene, false));
 
         this.gameScene = gameScene;
 
@@ -25,7 +25,6 @@ public class GameScreen extends RenderScreen {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.setTitle("Monkey Banana Catch!");
-        this.setPreferredSize(gameData.getGameScreenSize());
 
         this.setResizable(false);
         this.pack();

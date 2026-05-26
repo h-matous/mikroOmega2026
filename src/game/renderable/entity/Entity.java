@@ -19,7 +19,7 @@ public abstract class Entity implements DrawableAndUpdatable {
     protected Collider collider;
     protected boolean colliderEnabled;
 
-    protected static final boolean showBounds = true;
+    protected static final boolean showBounds = false;
 
 
     public boolean collidesWith(Entity other) {
@@ -59,15 +59,15 @@ public abstract class Entity implements DrawableAndUpdatable {
     @Override
     public void draw(Graphics2D gfx, GameData gameData) {
         if (showBounds) {
-            this.drawBounds(gfx);
+            this.drawBounds(gfx, gameData);
         }
 
     }
 
-    protected void drawBounds(Graphics2D gfx) {
+    protected void drawBounds(Graphics2D gfx, GameData gameData) {
         gfx.setColor(Color.BLACK);
 
-        if (rotation != 0) {
+        if (rotation != 0 && !gameData.getConstants().isEntityRotationDisabled()) {
             double rotationRadians = Math.toRadians(rotation);
             double sinOfRotation = Math.sin(rotationRadians);
             double cosOfRotation = Math.cos(rotationRadians);

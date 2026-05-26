@@ -16,6 +16,8 @@ public class AnimatedBackgroundData {
     private final int squareCount;
     private final int squareLen;
 
+    private boolean disableAnimation;
+
     public AnimatedBackgroundData() {
         this.targetAnimFPS = 20;
 
@@ -25,6 +27,8 @@ public class AnimatedBackgroundData {
 
         this.squareCount = 20;
         this.squareLen = 32;
+
+        this.disableAnimation = false;
     }
 
     public int getTargetAnimFPS() {
@@ -49,5 +53,17 @@ public class AnimatedBackgroundData {
 
     public int getSquareLen() {
         return squareLen;
+    }
+
+    public boolean isAnimationDisabled() {
+        return disableAnimation;
+    }
+
+    public void disableAnimation() {
+        this.disableAnimation = true;
+    }
+
+    public void enableAnimation() {
+        this.disableAnimation = false;
     }
 }

@@ -11,7 +11,7 @@ import java.awt.*;
 public class TitleScreen extends RenderScreen {
 
     public TitleScreen(Game game, GameData gameData) {
-        super(gameData, new RenderPanel2D(gameData, gameData.getTitleScreenSize(), new AnimatedBackground(gameData, gameData.getConstants().getAnimatedBackgroundData(), gameData.getTitleScreenSize())));
+        super(gameData, new RenderPanel2D(gameData, gameData.getTitleScreenSize(), new AnimatedBackground(gameData, gameData.getConstants().getAnimatedBackgroundData(), gameData.getTitleScreenSize()), true));
 
         initialize(game, gameData);
     }

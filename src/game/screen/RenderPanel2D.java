@@ -23,7 +23,7 @@ public class RenderPanel2D extends JPanel implements Runnable {
 
     private final DrawableAndUpdatable drawableAndUpdatable;
 
-    public RenderPanel2D(GameData gameData, Dimension frameSize, DrawableAndUpdatable drawableAndUpdatable) {
+    public RenderPanel2D(GameData gameData, Dimension frameSize, DrawableAndUpdatable drawableAndUpdatable, boolean disableListener) {
         super();
 
         this.gameData = gameData;
@@ -34,8 +34,9 @@ public class RenderPanel2D extends JPanel implements Runnable {
         this.setPreferredSize(frameSize);
         this.setBackground(Color.BLACK);
 
-
-        this.addKeyListener(gameData.getKeyHandler());
+        if (!disableListener) {
+            this.addKeyListener(gameData.getKeyHandler());
+        }
         this.setFocusable(true);
 
         frontBuffer = new BufferedImage(frameSize.width, frameSize.height, BufferedImage.TYPE_INT_ARGB);
@@ -52,7 +53,7 @@ public class RenderPanel2D extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        final double updateInterval = 1_000_000_000D / targetUPS; //time between each update in nanoseconds (100 UPS)
+        final double updateInterval = 1000000000d / targetUPS; //time between each update in nanoseconds (100 UPS)
         double accumulator = 0;
 
         long lastTime = System.nanoTime(); //last time in nanoseconds

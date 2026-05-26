@@ -1,6 +1,8 @@
 package game.renderable.entity;
 
+import game.data.PlayerAnimationData;
 import game.utilities.Animation;
+import game.utilities.Direction;
 import game.utilities.KeyHandler;
 import game.texture.TextureManager;
 import game.utilities.Vector2i;
@@ -11,24 +13,6 @@ import java.util.HashMap;
 
 public class Player extends Entity {
 
-    private enum Direction {
-        IDLE(new Vector2i(0, 0)),
-        UP(new Vector2i(0, -1)),
-        DOWN(new Vector2i(0, 1)),
-        LEFT(new Vector2i(-1, 0)),
-        RIGHT(new Vector2i(1, 0));
-
-        private final Vector2i dir;
-
-        Direction(Vector2i dir) {
-            this.dir = dir;
-        }
-
-        public Vector2i getVector() {
-            return dir;
-        }
-    }
-
     private Direction direction;
 
     private HashMap<Direction, Animation> animationMap;
@@ -36,21 +20,19 @@ public class Player extends Entity {
 
 
     public Player(GameData gameData) {
+        initializeAnimationMap(gameData);
 
         setDefaultValues(gameData);
-
-        initializeAnimationMap(gameData);
     }
 
     public void setDefaultValues(GameData gameData) {
-        this.pos = new Vector2i(100, 100);
-        this.scale = gameData.getConstants().getScale();
-        this.size = new Vector2i(gameData.getTexMngr().getTexture("monkey-idle").getWidth());
-        this.vel = new Vector2i();
-
         this.collider = gameData.getConstants().getCollider("player");
 
-        direction = Direction.IDLE;
+        this.scale = gameData.getConstants().getScale();
+        this.size = new Vector2i(currentAnimation.getCurrentFrame().getWidth());
+        this.pos = new Vector2i(gameData.getGameScreenSize().width / 2 - this.size.getX() * this.scale / 2, gameData.getGameScreenSize().height - this.size.getY() * this.scale - gameData.playerPxOffGameScreenGround());
+
+        this.vel = new Vector2i();
 
         this.rotation = 0;
 
@@ -66,14 +48,15 @@ public class Player extends Entity {
         int targetUPS = gameData.getConstants().getTargetUPS();
 
 
-        //TODO: DO something idk
-        animationMap.put(Direction.IDLE, new Animation(texMngr.getTexture("monkey-idle"), 1, 1, targetUPS));
-        animationMap.put(Direction.UP, new Animation(texMngr.getTexture("monkey-idle"), 1, 1, targetUPS));
-        animationMap.put(Direction.DOWN, new Animation(texMngr.getTexture("monkey-idle"), 1, 1, targetUPS));
-        animationMap.put(Direction.LEFT, new Animation(texMngr.getTexture("monkey-walk-left"), 8, 18, targetUPS));
-        animationMap.put(Direction.RIGHT, new Animation(texMngr.getTexture("monkey-walk-right"), 8, 18, targetUPS));
+        for (Direction direction : gameData.getConstants().getPlayerAnimationDataMap().keySet()) {
+            PlayerAnimationData animationData = gameData.getConstants().getPlayerAnimationData(direction);
 
-        currentAnimation = animationMap.get(direction);
+            animationMap.put(direction, new Animation(texMngr.getTexture(animationData.getTextureId()), animationData.getFrameCount(), animationData.getTargetAnimFPS(), targetUPS));
+        }
+
+        this.direction = gameData.getConstants().getPlayerInitialDirection();
+
+        this.currentAnimation = animationMap.get(direction);
     }
 
 
@@ -87,19 +70,12 @@ public class Player extends Entity {
 
         KeyHandler keyH = gameData.getKeyHandler();
 
-        if (keyH.isUpPressed()) {
-            direction = Direction.UP;
-            vel.add(direction.getVector());
-        }
-        if (keyH.isDownPressed()) {
-            direction = Direction.DOWN;
-            vel.add(direction.getVector());
-        }
-        if (keyH.isLeftPressed()) {
+
+        if (keyH.isLeftPressed() && this.pos.getX() + this.collider.getPos().getX() * this.scale >= 0) {
             direction = Direction.LEFT;
             vel.add(direction.getVector());
         }
-        if (keyH.isRightPressed()) {
+        if (keyH.isRightPressed() && this.pos.getX() + (this.collider.getPos().getX() + this.collider.getSize().getX()) * this.scale <= gameData.getGameScreenSize().width) {
             direction = Direction.RIGHT;
             vel.add(direction.getVector());
         }

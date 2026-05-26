@@ -22,7 +22,9 @@ public class GameScene implements DrawableAndUpdatable {
         this.player = new Player(gameData);
 
         this.bananas = new ArrayList<>();
-        bananas.add(new Banana(gameData));
+        for (int i = 0; i < 20; i++) {
+            bananas.add(new Banana(gameData));
+        }
 
         this.score = new Score(gameData.getGameScreenSize());
 

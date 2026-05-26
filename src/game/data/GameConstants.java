@@ -1,9 +1,11 @@
 package game.data;
 
+import game.utilities.Direction;
 import game.utilities.Vector2d;
 import game.utilities.Vector2i;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 
@@ -34,6 +36,18 @@ public class GameConstants {
     private int initialCollectibleFallingVel;
 
     private int maxCollectibleRotationSpeed;
+
+
+    private float playerPercentOfGameScreenHeightAboveGround;
+
+    //Animation direction mapping
+    private EnumMap<Direction, PlayerAnimationData> playerAnimationDataMap;
+
+    private Direction playerInitialDirection;
+
+
+    //When rotation is disabled, it may yield better performance
+    private boolean disableEntityRotation;
 
 
     public GameConstants() {
@@ -93,6 +107,24 @@ public class GameConstants {
         this.initialCollectibleFallingVel = 5;
 
         this.maxCollectibleRotationSpeed = 5;
+
+
+        this.playerPercentOfGameScreenHeightAboveGround = 0.0f;
+
+        //Animation direction mapping
+        this.playerAnimationDataMap = new EnumMap<>(Direction.class);
+        playerAnimationDataMap.put(Direction.IDLE, new PlayerAnimationData("monkey-idle", 1, 1));
+        playerAnimationDataMap.put(Direction.UP, new PlayerAnimationData("monkey-idle", 1, 1));
+        playerAnimationDataMap.put(Direction.DOWN, new PlayerAnimationData("monkey-idle", 1, 1));
+        playerAnimationDataMap.put(Direction.LEFT, new PlayerAnimationData("monkey-walk-left", 8, 18));
+        playerAnimationDataMap.put(Direction.RIGHT, new PlayerAnimationData("monkey-walk-right", 8, 18));
+
+        //When using a still Texture instead, frameCount is expected to be 1
+
+        this.playerInitialDirection = Direction.IDLE;
+
+
+        this.disableEntityRotation = false;
     }
 
     public int getTargetUPS() {
@@ -128,6 +160,7 @@ public class GameConstants {
 
     /**
      * Used for getting the score player receives after picking a collectible (Banana)
+     *
      * @param key ID (name) of the collectible (Banana)
      * @return returns an int that represents how much score should the player receive after collecting the collectible
      */
@@ -155,5 +188,49 @@ public class GameConstants {
 
     public int getMaxCollectibleRotationSpeed() {
         return maxCollectibleRotationSpeed;
+    }
+
+
+    public float getPlayerPercentOfGameScreenHeightAboveGround() {
+        return playerPercentOfGameScreenHeightAboveGround;
+    }
+
+    /**
+     * Used for getting the PlayerAnimationData, mapping an Animation for every Direction
+     * @param key Direction for which the AnimationData is requested
+     * @return returns PlayerAnimationData containing most importantly the texture name
+     */
+    public PlayerAnimationData getPlayerAnimationData(Direction key) {
+        PlayerAnimationData playerAnimationData = playerAnimationDataMap.get(key);
+
+        if (playerAnimationData != null) {
+            return playerAnimationData;
+        }
+
+        throw new IllegalArgumentException("PlayerAnimationData name doesn't exist: " + key);
+    }
+
+    /**
+     * Used for getting the entire PlayerAnimationData EnumMap
+     * @return returns a EnumMap containing unique PlayerAnimationData for every Direction
+     */
+    public EnumMap<Direction, PlayerAnimationData> getPlayerAnimationDataMap() {
+        return playerAnimationDataMap;
+    }
+
+    /**
+     * Used for getting the initial Direction state for the Player Animation
+     * @return returns the initial Direction
+     */
+    public Direction getPlayerInitialDirection() {
+        return playerInitialDirection;
+    }
+
+    /**
+     * Used for checking if the rotation of Entities is disabled (only for rendering), disabling it could yield in better performance
+     * @return returns the boolean if Entity rotation is disabled
+     */
+    public boolean isEntityRotationDisabled() {
+        return disableEntityRotation;
     }
 }

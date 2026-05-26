@@ -12,12 +12,16 @@ public class Animation {
     private int updateCounter;
     private final int frameDelay; //updates needed to switch frame
 
+    private final boolean isStill;
+
     public Animation(Texture[] frames, int targetAnimFPS, int targetUPS) {
         this.frames = frames;
         this.currentFrame = 0;
 
         this.updateCounter = 0;
         this.frameDelay = targetUPS / targetAnimFPS;
+
+        this.isStill = frames.length <= 1;
     }
 
     public Animation(Texture spriteSheet, int frameCount, int targetAnimFPS, int targetUPS) {
@@ -40,14 +44,18 @@ public class Animation {
         this.currentFrame = 0;
 
         this.updateCounter = 0;
+
+        this.isStill = frameCount <= 1;
     }
 
     public void update() {
-        updateCounter++;
+        if (!isStill) {
+            updateCounter++;
 
-        if (updateCounter >= frameDelay) {
-            updateCounter = 0;
-            currentFrame = (currentFrame + 1) % frames.length;
+            if (updateCounter >= frameDelay) {
+                updateCounter = 0;
+                currentFrame = (currentFrame + 1) % frames.length;
+            }
         }
     }
 

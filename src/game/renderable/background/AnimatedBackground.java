@@ -34,26 +34,29 @@ public class AnimatedBackground implements DrawableAndUpdatable {
         droplets = new ArrayDeque<>();
 
         bg = new Texture(new LinearVerticalGradientTexture(frameSize, data.getTopColor(), data.getBottomColor()));
+
     }
 
     @Override
     public void update(GameData gameData) {
-        updateCounter++;
+        if (!data.isAnimationDisabled()) {
+            updateCounter++;
 
-        if (updateCounter >= frameDelay) {
-            updateCounter = 0;
+            if (updateCounter >= frameDelay) {
+                updateCounter = 0;
 
-            //Deleting a droplet if it falls too far down
-            if (!droplets.isEmpty() && droplets.getFirst().isOffScreen()) {
-                droplets.removeFirst();
-            }
+                //Deleting a droplet if it falls too far down
+                if (!droplets.isEmpty() && droplets.getFirst().isOffScreen()) {
+                    droplets.removeFirst();
+                }
 
-            //Adding droplets
-            droplets.add(new BackgroundDroplet(gameData, data, frameSize));
+                //Adding droplets
+                droplets.add(new BackgroundDroplet(gameData, data, frameSize));
 
-            //Updating droplets
-            for (BackgroundDroplet droplet : droplets) {
-                droplet.update(gameData);
+                //Updating droplets
+                for (BackgroundDroplet droplet : droplets) {
+                    droplet.update(gameData);
+                }
             }
         }
     }
@@ -63,8 +66,10 @@ public class AnimatedBackground implements DrawableAndUpdatable {
     public void draw(Graphics2D gfx, GameData gameData) {
         gfx.drawImage(bg.getImage(), 0,  0, bg.getWidth(), bg.getHeight(), null);
 
-        for (BackgroundDroplet droplet : droplets) {
-            droplet.draw(gfx, gameData);
+        if (!data.isAnimationDisabled()) {
+            for (BackgroundDroplet droplet : droplets) {
+                droplet.draw(gfx, gameData);
+            }
         }
     }
 }
