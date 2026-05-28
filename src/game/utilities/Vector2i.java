@@ -76,4 +76,9 @@ public class Vector2i {
     public void add(Vector2i amount) {
         add(amount.getX(), amount.getY());
     }
+
+    @Override
+    public String toString() {
+        return "{ " + x + ", " + y + " }";
+    }
 }

@@ -19,7 +19,7 @@ public class RenderPanel2D extends JPanel implements Runnable {
 
     private final Object bufferLock;
 
-    private boolean running;
+    private volatile boolean running;
 
     private final DrawableAndUpdatable drawableAndUpdatable;
 
@@ -84,11 +84,19 @@ public class RenderPanel2D extends JPanel implements Runnable {
             //Flush pending graphics drawing operations to the screen immediately
             Toolkit.getDefaultToolkit().sync();
 
+
+            restThread((long) ((updateInterval - accumulator) / 1_000_000));
+        }
+    }
+
+    private void restThread(long sleepTimeMs) {
+        if (sleepTimeMs > 1) {
             try {
-                Thread.sleep(1);
+                Thread.sleep(sleepTimeMs);
             }
             catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                Thread.currentThread().interrupt();
+                this.running = false;
             }
         }
     }
@@ -127,13 +135,9 @@ public class RenderPanel2D extends JPanel implements Runnable {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        final BufferedImage renderedImage;
-
         synchronized(bufferLock) {
-            renderedImage = frontBuffer;
+            g.drawImage(frontBuffer, 0, 0, null);
         }
-
-        g.drawImage(renderedImage, 0, 0, null);
     }
 
     public void setRunning(boolean running) {

@@ -13,7 +13,7 @@ import java.util.List;
 public class GameConstants {
     private int targetUPS;
 
-    private int scale;
+    private float scaleCoefficient;
 
     private Vector2d gameScreenSizePercentage;
     private Vector2d titleScreenSizePercentage;
@@ -25,17 +25,17 @@ public class GameConstants {
     private HashMap<String, Collider> colliderMap;
 
     //Scores
-    private HashMap<String, Integer> collectibleScoreMap;
+    private HashMap<String, Integer> collectableScoreMap;
 
     //Background
     private AnimatedBackgroundData animatedBackgroundData;
 
 
     //Velocities
-    private int maxPlayerWalkingVel;
-    private int initialCollectibleFallingVel;
+    private int initialPlayerWalkingVel;
+    private int initialCollectableFallingVel;
 
-    private int maxCollectibleRotationSpeed;
+    private int maxCollectableRotationSpeed;
 
 
     private float playerPercentOfGameScreenHeightAboveGround;
@@ -45,9 +45,16 @@ public class GameConstants {
 
     private Direction playerInitialDirection;
 
+    //Spawning data for collectables
+    private CollectableSpawningData collectableSpawningData;
+
 
     //When rotation is disabled, it may yield better performance
     private boolean disableEntityRotation;
+
+    //Shows Entity bounds for debugging purposes
+    private boolean showEntityBounds;
+
 
 
     public GameConstants() {
@@ -58,8 +65,8 @@ public class GameConstants {
         //Target Updates Per Second
         this.targetUPS = 100;
 
-        //Rendering scale
-        this.scale = 5;
+        //Rendering scale, from my testing on FHD 16:9 (1080 / 5 = 216)
+        this.scaleCoefficient = 216.0f;
 
         //Fraction of the users screen resolution
         this.gameScreenSizePercentage = new Vector2d(0.5, 0.8);
@@ -91,22 +98,22 @@ public class GameConstants {
         colliderMap.put("banana-4", new Collider(new Vector2i(25, 23), new Vector2i(13, 15)));
         colliderMap.put("banana-5", new Collider(new Vector2i(25, 23), new Vector2i(14, 16)));
 
-        //CollectibleScores
-        this.collectibleScoreMap = new HashMap<>();
-        collectibleScoreMap.put("banana-1", 1);
-        collectibleScoreMap.put("banana-2", 1);
-        collectibleScoreMap.put("banana-3", 1);
-        collectibleScoreMap.put("banana-4", 3);
-        collectibleScoreMap.put("banana-5", 3);
+        //CollectableScores
+        this.collectableScoreMap = new HashMap<>();
+        collectableScoreMap.put("banana-1", 1);
+        collectableScoreMap.put("banana-2", 1);
+        collectableScoreMap.put("banana-3", 1);
+        collectableScoreMap.put("banana-4", 3);
+        collectableScoreMap.put("banana-5", 3);
 
         //Background
         this.animatedBackgroundData = new AnimatedBackgroundData();
 
         //Velocities
-        this.maxPlayerWalkingVel = 4;
-        this.initialCollectibleFallingVel = 5;
+        this.initialPlayerWalkingVel = 8;
+        this.initialCollectableFallingVel = 5;
 
-        this.maxCollectibleRotationSpeed = 5;
+        this.maxCollectableRotationSpeed = 5;
 
 
         this.playerPercentOfGameScreenHeightAboveGround = 0.0f;
@@ -116,23 +123,25 @@ public class GameConstants {
         playerAnimationDataMap.put(Direction.IDLE, new PlayerAnimationData("monkey-idle", 1, 1));
         playerAnimationDataMap.put(Direction.UP, new PlayerAnimationData("monkey-idle", 1, 1));
         playerAnimationDataMap.put(Direction.DOWN, new PlayerAnimationData("monkey-idle", 1, 1));
-        playerAnimationDataMap.put(Direction.LEFT, new PlayerAnimationData("monkey-walk-left", 8, 18));
-        playerAnimationDataMap.put(Direction.RIGHT, new PlayerAnimationData("monkey-walk-right", 8, 18));
+        playerAnimationDataMap.put(Direction.LEFT, new PlayerAnimationData("monkey-walk-left", 8, 36));
+        playerAnimationDataMap.put(Direction.RIGHT, new PlayerAnimationData("monkey-walk-right", 8, 36));
 
         //When using a still Texture instead, frameCount is expected to be 1
 
         this.playerInitialDirection = Direction.IDLE;
 
+        this.collectableSpawningData = new CollectableSpawningData();
 
         this.disableEntityRotation = false;
+        this.showEntityBounds = false;
     }
 
     public int getTargetUPS() {
         return targetUPS;
     }
 
-    public int getScale() {
-        return scale;
+    public float getScaleCoefficient() {
+        return scaleCoefficient;
     }
 
     public Vector2d getGameScreenSizePercentage() {
@@ -159,13 +168,13 @@ public class GameConstants {
     }
 
     /**
-     * Used for getting the score player receives after picking a collectible (Banana)
+     * Used for getting the score player receives after picking a collectable (Banana)
      *
-     * @param key ID (name) of the collectible (Banana)
-     * @return returns an int that represents how much score should the player receive after collecting the collectible
+     * @param key ID (name) of the collectable (Banana)
+     * @return returns an int that represents how much score should the player receive after collecting the collectable
      */
-    public int getCollectibleScore(String key) {
-        Integer collectibleScore = collectibleScoreMap.get(key);
+    public int getCollectableScore(String key) {
+        Integer collectibleScore = collectableScoreMap.get(key);
 
         if (collectibleScore != null) {
             return collectibleScore;
@@ -178,16 +187,16 @@ public class GameConstants {
         return animatedBackgroundData;
     }
 
-    public int getMaxPlayerWalkingVel() {
-        return maxPlayerWalkingVel;
+    public int getInitialPlayerWalkingVel() {
+        return initialPlayerWalkingVel;
     }
 
-    public int getInitialCollectibleFallingVel() {
-        return initialCollectibleFallingVel;
+    public int getInitialCollectableFallingVel() {
+        return initialCollectableFallingVel;
     }
 
-    public int getMaxCollectibleRotationSpeed() {
-        return maxCollectibleRotationSpeed;
+    public int getMaxCollectableRotationSpeed() {
+        return maxCollectableRotationSpeed;
     }
 
 
@@ -227,10 +236,26 @@ public class GameConstants {
     }
 
     /**
+     * Used for getting the information about collectable spawning
+     * @return returns the collectable spawning data
+     */
+    public CollectableSpawningData getCollectableSpawningData() {
+        return collectableSpawningData;
+    }
+
+    /**
      * Used for checking if the rotation of Entities is disabled (only for rendering), disabling it could yield in better performance
      * @return returns the boolean if Entity rotation is disabled
      */
     public boolean isEntityRotationDisabled() {
         return disableEntityRotation;
+    }
+
+    /**
+     * Used for checking if Entity bounds should be shown, useful when debugging
+     * @return returns the boolean if Entity bounds should be shown
+     */
+    public boolean shouldShowEntityBounds() {
+        return showEntityBounds;
     }
 }

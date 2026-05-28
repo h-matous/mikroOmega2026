@@ -28,9 +28,9 @@ public class Player extends Entity {
     public void setDefaultValues(GameData gameData) {
         this.collider = gameData.getConstants().getCollider("player");
 
-        this.scale = gameData.getConstants().getScale();
+        this.scale = gameData.getScale();
         this.size = new Vector2i(currentAnimation.getCurrentFrame().getWidth());
-        this.pos = new Vector2i(gameData.getGameScreenSize().width / 2 - this.size.getX() * this.scale / 2, gameData.getGameScreenSize().height - this.size.getY() * this.scale - gameData.playerPxOffGameScreenGround());
+        this.pos = new Vector2i((int) (gameData.getGameScreenSize().width / 2.0 - this.size.getX() * this.scale / 2.0), (int) (gameData.getGameScreenSize().height - this.size.getY() * this.scale - gameData.playerPxOffGameScreenGround()));
 
         this.vel = new Vector2i();
 
@@ -82,7 +82,7 @@ public class Player extends Entity {
 
         if (vel.getX() == 0) direction = Direction.IDLE;
 
-        vel.multiply(gameData.getConstants().getMaxPlayerWalkingVel());
+        vel.multiply(gameData.getCurrentPlayerWalkingVel());
 
         pos.add(vel);
 
@@ -95,6 +95,6 @@ public class Player extends Entity {
     public void draw(Graphics2D gfx, GameData gameData) {
         super.draw(gfx, gameData);
 
-        gfx.drawImage(currentAnimation.getCurrentFrame().getImage(), pos.getX(), pos.getY(), size.getX() * scale, size.getY() * scale, null);
+        gfx.drawImage(currentAnimation.getCurrentFrame().getImage(), pos.getX(), pos.getY(), (int) (size.getX() * scale), (int) (size.getY() * scale), null);
     }
 }

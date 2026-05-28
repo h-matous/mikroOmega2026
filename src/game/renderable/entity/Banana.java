@@ -8,7 +8,7 @@ import game.data.GameData;
 import java.awt.*;
 
 public class Banana extends Entity {
-    private Vector2i fallingVel;
+    private int fallingVel;
 
     private Texture texture;
 
@@ -37,9 +37,9 @@ public class Banana extends Entity {
 
         this.collider = gameData.getConstants().getCollider(id);
 
-        this.scale = gameData.getConstants().getScale();
+        this.scale = gameData.getScale();
         this.size = new Vector2i(texture.getWidth(), texture.getHeight());
-        this.pos = new Vector2i(gameData.getRnd().nextInt(-this.collider.getPos().getX() * this.scale, gameData.getGameScreenSize().width - this.size.getX() * this.scale + (this.size.getX() - this.collider.getPos().getX() - this.collider.getSize().getX()) * this.scale), -this.size.getY() * this.scale);
+        this.pos = new Vector2i(gameData.getRnd().nextInt((int) (-1 * this.collider.getPos().getX() * this.scale), (int) (gameData.getGameScreenSize().width - this.size.getX() * this.scale + (this.size.getX() - this.collider.getPos().getX() - this.collider.getSize().getX()) * this.scale)), (int) (-1 * this.size.getY() * this.scale));
 
         this.vel = new Vector2i();
 
@@ -50,9 +50,9 @@ public class Banana extends Entity {
 
         this.colliderEnabled = true;
 
-        this.collectibleScore = gameData.getConstants().getCollectibleScore(id);
+        this.collectibleScore = gameData.getConstants().getCollectableScore(id);
 
-        this.rotationSpeed = gameData.getConstants().getMaxCollectibleRotationSpeed();
+        this.rotationSpeed = gameData.getConstants().getMaxCollectableRotationSpeed();
 
         //Random rotation direction
         if (gameData.getRnd().nextBoolean()) {
@@ -72,7 +72,7 @@ public class Banana extends Entity {
     public void update(GameData gameData) {
         super.update(gameData);
 
-        pos.add(fallingVel);
+        pos.add(0, fallingVel);
         rotation = rotation + rotationSpeed;
     }
 
@@ -81,10 +81,10 @@ public class Banana extends Entity {
         super.draw(gfx, gameData);
 
         if (!gameData.getConstants().isEntityRotationDisabled()) {
-            gfx.drawImage(this.texture.getRotatedInstance(rotation).getImage(), pos.getX(), pos.getY(), size.getX() * scale, size.getY() * scale, null);
+            gfx.drawImage(this.texture.getRotatedInstance(rotation).getImage(), pos.getX(), pos.getY(), (int) (size.getX() * scale), (int) (size.getY() * scale), null);
         }
         else {
-            gfx.drawImage(this.texture.getImage(), pos.getX(), pos.getY(), size.getX() * scale, size.getY() * scale, null);
+            gfx.drawImage(this.texture.getImage(), pos.getX(), pos.getY(), (int) (size.getX() * scale), (int) (size.getY() * scale), null);
         }
     }
 }

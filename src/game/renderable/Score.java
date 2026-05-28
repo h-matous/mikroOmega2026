@@ -1,20 +1,20 @@
 package game.renderable;
 
 import game.data.GameData;
+import game.data.ScoreData;
 
 import java.awt.*;
 
 
 public class Score implements DrawableAndUpdatable {
+    private final ScoreData scoreData;
     private final Dimension frameSize;
-    private int score;
-
 
     private final Color color;
 
-    public Score(Dimension frameSize) {
+    public Score(ScoreData scoreData, Dimension frameSize) {
+        this.scoreData = scoreData;
         this.frameSize = frameSize;
-        score = 0;
 
 
         this.color = Color.BLACK;
@@ -22,7 +22,7 @@ public class Score implements DrawableAndUpdatable {
 
     public void addScore(int offset) {
         if (offset > 0) {
-            score = score + offset;
+            scoreData.offsetScore(offset);
         }
     }
 
@@ -40,15 +40,15 @@ public class Score implements DrawableAndUpdatable {
         int strWidth = gfx.getFontMetrics().stringWidth(str);
 
         gfx.setColor(color);
-        gfx.drawString(str,  frameSize.width / 2 - strWidth / 2, frameSize.height / 2);
+        gfx.drawString(str, frameSize.width / 2 - strWidth / 2, frameSize.height / 2);
     }
 
     public int getScore() {
-        return score;
+        return scoreData.getScore();
     }
 
     @Override
     public String toString() {
-        return String.valueOf(score);
+        return String.valueOf(scoreData.getScore());
     }
 }

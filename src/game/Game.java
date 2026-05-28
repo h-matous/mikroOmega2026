@@ -17,7 +17,7 @@ public class Game {
 
 
     public Game() {
-        setLookAndFeel();
+        configUI();
 
         gameData = new GameData();
 
@@ -45,12 +45,26 @@ public class Game {
         gameScreen.startThread();
     }
 
-    private static void setLookAndFeel() {
+    private static void configUI() {
+        setUILookAndFeel();
+        setUIScalingProperty();
+    }
+
+    private static void setUILookAndFeel() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
         catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            System.out.println("Failed to set system LookAndFeel: " + e.getMessage());
+            System.out.println("Failed to set UI system LookAndFeel: " + e.getMessage());
+        }
+    }
+
+    private static void setUIScalingProperty() {
+        try {
+            System.setProperty("sun.java2d.uiScale", "1");
+        }
+        catch (SecurityException | NullPointerException | IllegalArgumentException e) {
+            System.out.println("Failed to set UI system Scale property: " + e.getMessage());
         }
     }
 }

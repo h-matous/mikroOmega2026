@@ -49,6 +49,7 @@ public class Vector2d {
         this.y = common;
     }
 
+
     public void multiply(double factor) {
         this.x = this.x * factor;
         this.y = this.y * factor;
@@ -74,5 +75,10 @@ public class Vector2d {
 
     public void add(Vector2d amount) {
         add(amount.getX(), amount.getY());
+    }
+
+    @Override
+    public String toString() {
+        return "{ " + x + ", " + y + " }";
     }
 }

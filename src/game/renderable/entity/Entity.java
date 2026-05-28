@@ -10,7 +10,7 @@ import java.awt.*;
 
 public abstract class Entity implements DrawableAndUpdatable {
     protected Vector2i pos;
-    protected int scale;
+    protected float scale;
     protected Vector2i size;
     protected Vector2i vel;
 
@@ -19,27 +19,25 @@ public abstract class Entity implements DrawableAndUpdatable {
     protected Collider collider;
     protected boolean colliderEnabled;
 
-    protected static final boolean showBounds = false;
-
 
     public boolean collidesWith(Entity other) {
         if (this.colliderEnabled && other.colliderEnabled) {
             //For axis X
-            int thisX1 = this.pos.getX() + this.collider.getPos().getX() * this.scale;
-            int otherX1 = other.pos.getX() + other.collider.getPos().getX() * other.scale;
+            float thisX1 = this.pos.getX() + this.collider.getPos().getX() * this.scale;
+            float otherX1 = other.pos.getX() + other.collider.getPos().getX() * other.scale;
 
-            int thisX2 = this.pos.getX() + this.collider.getPos().getX() * this.scale + this.collider.getSize().getX() * this.scale;
-            int otherX2 = other.pos.getX() + other.collider.getPos().getX() * other.scale + other.collider.getSize().getX() * other.scale;
+            float thisX2 = this.pos.getX() + this.collider.getPos().getX() * this.scale + this.collider.getSize().getX() * this.scale;
+            float otherX2 = other.pos.getX() + other.collider.getPos().getX() * other.scale + other.collider.getSize().getX() * other.scale;
 
             boolean cond1 = otherX1 < thisX2;
             boolean cond2 = otherX2 > thisX1;
 
             //For axis Y
-            int thisY1 = this.pos.getY() + this.collider.getPos().getY() * this.scale;
-            int otherY1 = other.pos.getY() + other.collider.getPos().getY() * other.scale;
+            float thisY1 = this.pos.getY() + this.collider.getPos().getY() * this.scale;
+            float otherY1 = other.pos.getY() + other.collider.getPos().getY() * other.scale;
 
-            int thisY2 = this.pos.getY() + this.collider.getPos().getY() * this.scale + this.collider.getSize().getY() * this.scale;
-            int otherY2 = other.pos.getY() + other.collider.getPos().getY() * other.scale + other.collider.getSize().getY() * other.scale;
+            float thisY2 = this.pos.getY() + this.collider.getPos().getY() * this.scale + this.collider.getSize().getY() * this.scale;
+            float otherY2 = other.pos.getY() + other.collider.getPos().getY() * other.scale + other.collider.getSize().getY() * other.scale;
 
             boolean cond3 = otherY1 < thisY2;
             boolean cond4 = otherY2 > thisY1;
@@ -58,7 +56,7 @@ public abstract class Entity implements DrawableAndUpdatable {
 
     @Override
     public void draw(Graphics2D gfx, GameData gameData) {
-        if (showBounds) {
+        if (gameData.getConstants().shouldShowEntityBounds()) {
             this.drawBounds(gfx, gameData);
         }
 
@@ -66,6 +64,7 @@ public abstract class Entity implements DrawableAndUpdatable {
 
     protected void drawBounds(Graphics2D gfx, GameData gameData) {
         gfx.setColor(Color.BLACK);
+
 
         if (rotation != 0 && !gameData.getConstants().isEntityRotationDisabled()) {
             double rotationRadians = Math.toRadians(rotation);
@@ -88,22 +87,23 @@ public abstract class Entity implements DrawableAndUpdatable {
 
         }
 
+
         //Whole Texture rectangle outline
-        gfx.drawRect(pos.getX(), pos.getY(), size.getX() * scale, size.getY() * scale);
+        gfx.drawRect(pos.getX(), pos.getY(), (int) (size.getX() * scale), (int) (size.getY() * scale));
 
         //Whole Texture rectangle filling
         gfx.setColor(new Color(0, 255, 0, 25));
-        gfx.fillRect(pos.getX(), pos.getY(), size.getX() * scale, size.getY() * scale);
+        gfx.fillRect(pos.getX(), pos.getY(), (int) (size.getX() * scale), (int) (size.getY() * scale));
         gfx.setColor(Color.BLACK);
 
 
         //Collider rectangle outline
-        gfx.drawRect(pos.getX() + collider.getPos().getX() * scale, pos.getY() + collider.getPos().getY() * scale, collider.getSize().getX() * scale, collider.getSize().getY() * scale);
+        gfx.drawRect((int) (pos.getX() + collider.getPos().getX() * scale), (int) (pos.getY() + collider.getPos().getY() * scale), (int) (collider.getSize().getX() * scale), (int) (collider.getSize().getY() * scale));
 
         if (this.colliderEnabled) {
             //Collider rectangle filling
             gfx.setColor(new Color(255, 0, 0, 80));
-            gfx.fillRect(pos.getX() + collider.getPos().getX() * scale, pos.getY() + collider.getPos().getY() * scale, collider.getSize().getX() * scale, collider.getSize().getY() * scale);
+            gfx.fillRect((int) (pos.getX() + collider.getPos().getX() * scale), (int) (pos.getY() + collider.getPos().getY() * scale), (int) (collider.getSize().getX() * scale), (int) (collider.getSize().getY() * scale));
         }
     }
 
