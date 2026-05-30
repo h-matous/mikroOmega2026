@@ -1,6 +1,7 @@
 package game.screen;
 
 import game.data.GameState;
+import game.data.InputMethod;
 import game.renderable.background.AnimatedBackground;
 import game.data.GameData;
 
@@ -40,6 +41,7 @@ public class TitleScreen extends RenderScreen {
     JButton mp_playButton;
     JButton mp_statisticsButton;
     JButton mp_settingsButton;
+    JButton mp_exitButton;
 
     /**
      * Constructor sets the values
@@ -97,18 +99,20 @@ public class TitleScreen extends RenderScreen {
         mainPanel.setOpaque(false);
 
         JLabel mp_gameLabel = new JLabel();
-        configJLabel(mp_gameLabel, gameData.getConstants().getGameName());
+        configJLabel(gameData, mp_gameLabel, gameData.getConstants().getGameName());
 
 
         mp_playButton = new JButton();
-        configJButton(mp_playButton, "Play", x->{gameData.changeGameState(GameState.GAME_MAIN);});
+        configJButton(gameData, mp_playButton, "Play", x->{gameData.changeGameState(GameState.GAME_MAIN);});
 
         mp_statisticsButton = new JButton();
-        configJButton(mp_statisticsButton, "Statistics", x->{gameData.changeGameState(GameState.TITLE_STATISTICS);});
+        configJButton(gameData, mp_statisticsButton, "Statistics", x->{gameData.changeGameState(GameState.TITLE_STATISTICS);});
 
         mp_settingsButton = new JButton();
-        configJButton(mp_settingsButton, "Settings", x->{gameData.changeGameState(GameState.TITLE_SETTINGS);});
+        configJButton(gameData, mp_settingsButton, "Settings", x->{gameData.changeGameState(GameState.TITLE_SETTINGS);});
 
+        mp_exitButton = new JButton();
+        configJButton(gameData, mp_exitButton, "Exit", x->{gameData.changeGameState(GameState.EXIT);});
 
 
         mainPanel.add(Box.createVerticalGlue());
@@ -120,6 +124,9 @@ public class TitleScreen extends RenderScreen {
         mainPanel.add(mp_statisticsButton);
         mainPanel.add(Box.createVerticalGlue());
         mainPanel.add(mp_settingsButton);
+        mainPanel.add(Box.createVerticalGlue());
+        mainPanel.add(mp_exitButton);
+
         mainPanel.add(Box.createVerticalGlue());
     }
 
@@ -133,25 +140,41 @@ public class TitleScreen extends RenderScreen {
         settingsPanel.setOpaque(false);
 
         JButton sp_settingsBackButton = new JButton();
-        configJButton(sp_settingsBackButton, "Back", x->{gameData.changeGameState(GameState.TITLE_MAIN);});
+        configJButton(gameData, sp_settingsBackButton, "Back", x->{gameData.changeGameState(GameState.TITLE_MAIN);});
 
 
         JLabel sp_settingsLabel = new JLabel();
-        configJLabel(sp_settingsLabel, "Settings");
+        configJLabel(gameData, sp_settingsLabel, "Settings");
+
+
+        JLabel sp_inputMethodLabel = new JLabel();
+        configJLabel(gameData, sp_inputMethodLabel, "Choose your input method:");
+
+        JComboBox<String> sp_comboBox = new JComboBox<>(InputMethod.getValueNames());
+
+        sp_comboBox.setMaximumSize(new Dimension(settingsPanel.getWidth() / 3, settingsPanel.getHeight() / 3));
+        sp_comboBox.addActionListener(x->{gameData.setChosenInputMethod(InputMethod.values()[sp_comboBox.getSelectedIndex()]);});
+
+        sp_comboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 
         JCheckBox sp_checkBox1 = new JCheckBox();
-        configJCheckBox(sp_checkBox1, "Disable background animation", x->{gameData.setDisableBackgroundAnimation(!gameData.isBackgroundAnimationDisabled());});
+        configJCheckBox(gameData, sp_checkBox1, "Disable background animation", x->{gameData.setDisableBackgroundAnimation(!gameData.isBackgroundAnimationDisabled());});
 
         JCheckBox sp_checkBox2 = new JCheckBox();
-        configJCheckBox(sp_checkBox2, "Disable player animation", x->{gameData.setPlayerAnimationDisabled(!gameData.isPlayerAnimationDisabled());});
+        configJCheckBox(gameData, sp_checkBox2, "Disable player animation", x->{gameData.setPlayerAnimationDisabled(!gameData.isPlayerAnimationDisabled());});
 
         JCheckBox sp_checkBox3 = new JCheckBox();
-        configJCheckBox(sp_checkBox3, "Disable banana rotation", x->{gameData.setCollectableRotationDisabled(!gameData.isCollectableRotationDisabled());});
+        configJCheckBox(gameData, sp_checkBox3, "Disable banana rotation", x->{gameData.setCollectableRotationDisabled(!gameData.isCollectableRotationDisabled());});
 
         settingsPanel.add(Box.createVerticalGlue());
         settingsPanel.add(sp_settingsLabel);
-        settingsPanel.add(Box.createVerticalStrut(10));
+        settingsPanel.add(Box.createVerticalStrut(125));
+
+        settingsPanel.add(sp_inputMethodLabel);
+        settingsPanel.add(Box.createVerticalGlue());
+        settingsPanel.add(sp_comboBox);
+        settingsPanel.add(Box.createVerticalStrut(75));
 
         settingsPanel.add(sp_checkBox1);
         settingsPanel.add(Box.createVerticalGlue());
@@ -159,67 +182,11 @@ public class TitleScreen extends RenderScreen {
         settingsPanel.add(Box.createVerticalGlue());
         settingsPanel.add(sp_checkBox3);
 
-        settingsPanel.add(Box.createVerticalStrut(10));
+        settingsPanel.add(Box.createVerticalStrut(125));
         settingsPanel.add(sp_settingsBackButton);
         settingsPanel.add(Box.createVerticalGlue());
     }
 
-    /**
-     * Used for configuring the JLabels
-     * @param label the JLabel to be configured
-     * @param text text of the JLabel as a String
-     */
-    private void configJLabel(JLabel label, String text) {
-        label.setText(text);
-        label.setFont(gameData.getLabelFont());
-        label.setForeground(Color.WHITE);
-        //label.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
-        //label.setBorder(BorderFactory.createStrokeBorder(new BasicStroke(2)));
-        //label.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, Color.RED, Color.BLUE));
-        //label.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.YELLOW, new Color(150, 90, 30)));
-        label.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, Color.GREEN, new Color(5, 127, 255)));
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-    }
-
-    /**
-     * Used for configuring the JButtons
-     * @param button the JButton to be configured
-     * @param text text of the JButton as a String
-     * @param actionListener action to perform after the button press
-     */
-    private void configJButton(JButton button, String text, ActionListener actionListener) {
-        button.setText(text);
-        button.setFont(gameData.getLabelFont());
-        button.setForeground(Color.BLACK);
-
-        button.addActionListener(actionListener);
-
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        button.setFocusPainted(false);
-        button.setOpaque(false);
-    }
-
-    /**
-     * Used for configuring JCheckBoxes
-     * @param checkBox the JCheckBox to be configured
-     * @param text text of the JCheckBox as a String
-     * @param actionListener action to perform after the checkBox toggle
-     */
-    private void configJCheckBox(JCheckBox checkBox, String text, ActionListener actionListener) {
-        checkBox.setText(text);
-        checkBox.setFont(gameData.getLabelFont());
-        checkBox.setForeground(Color.WHITE);
-
-        //checkBox.setSize((int) (checkBox.getWidth() * gameData.getScale()), (int) (checkBox.getHeight() * gameData.getScale()));
-
-        checkBox.addActionListener(actionListener);
-
-        checkBox.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        checkBox.setFocusPainted(false);
-        checkBox.setOpaque(false);
-    }
 
     /**
      * Used for enabling or disabling all JButtons on the mainPanel,
@@ -231,6 +198,7 @@ public class TitleScreen extends RenderScreen {
         mp_playButton.setEnabled(condition);
         mp_statisticsButton.setEnabled(condition);
         mp_settingsButton.setEnabled(condition);
+        mp_exitButton.setEnabled(condition);
     }
 
     /**

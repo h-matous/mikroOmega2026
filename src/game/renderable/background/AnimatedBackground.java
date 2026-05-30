@@ -14,15 +14,15 @@ import java.util.ArrayDeque;
  * The AnimatedBackground class is used for
  */
 public class AnimatedBackground implements DrawableAndUpdatable {
-    private final Dimension frameSize;
+    private Dimension frameSize;
 
-    private final AnimatedBackgroundData data;
+    private AnimatedBackgroundData data;
 
-    private final Texture bg;
+    private Texture bg;
 
 
     private int updateCounter;
-    private final int frameDelay; //updates needed to switch frame
+    private int frameDelay; //updates needed to switch frame
 
     private final ArrayDeque<BackgroundDroplet> droplets;
 
@@ -30,21 +30,31 @@ public class AnimatedBackground implements DrawableAndUpdatable {
     /**
      * Constructor sets the values
      * @param gameData data of the Game
-     * @param data data for the AnimatedBackgrouond
+     * @param data data for the AnimatedBackground
      * @param size the AnimatedBackground size as a Dimension
      */
     public AnimatedBackground(GameData gameData, AnimatedBackgroundData data, Dimension size) {
         this.data = data;
+
+        this.droplets = new ArrayDeque<>();
+
+        reset(gameData, data, size);
+    }
+
+    /**
+     * Used for resetting the AnimatedBackground
+     */
+    public void reset(GameData gameData, AnimatedBackgroundData data, Dimension size) {
+        this.data = data;
+
+        droplets.clear();
 
         this.updateCounter = 0;
         this.frameDelay = gameData.getConstants().getTargetUPS() / data.getTargetAnimFPS();
 
         this.frameSize = size;
 
-        droplets = new ArrayDeque<>();
-
-        bg = new LinearVerticalGradientTexture(frameSize, data.getTopColor(), data.getBottomColor());
-
+        this.bg = new LinearVerticalGradientTexture(size, data.getTopColor(), data.getBottomColor());
     }
 
     /**

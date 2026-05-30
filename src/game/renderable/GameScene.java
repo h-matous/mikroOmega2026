@@ -1,5 +1,7 @@
 package game.renderable;
 
+import game.data.GameState;
+import game.data.statistics.Statistic;
 import game.renderable.background.AnimatedBackground;
 import game.data.GameData;
 import game.renderable.entity.Banana;
@@ -23,7 +25,7 @@ public class GameScene implements DrawableAndUpdatable {
     private int spawnUpdateCounter;
     private int bananaSpawnDelay;
 
-    //TODO: game pausing
+    private volatile boolean pendingReset;
 
     /**
      * Constructor sets the default value
@@ -38,14 +40,45 @@ public class GameScene implements DrawableAndUpdatable {
 
         this.bg = new AnimatedBackground(gameData, gameData.getConstants().getAnimatedBackgroundData(), gameData.getGameScreenSize());
 
+
+        this.requestReset();
+    }
+
+    /**
+     * Used for requesting a GameScene reset
+     */
+    public void requestReset() {
+        this.pendingReset = true;
+    }
+
+    /**
+     * Used for resetting the GameScene for another gameplay
+     */
+    private void reset(GameData gameData) {
+        this.player.reset(gameData);
+        this.bananas.clear();
+        this.score.reset(gameData.getPlayerScoreData(), gameData.getGameScreenSize());
+        this.bg.reset(gameData, gameData.getConstants().getAnimatedBackgroundData(), gameData.getGameScreenSize());
+
         //Counts how many updates have occured from the last Banana spawn
         this.spawnUpdateCounter = 0;
+
         //Current number of updates (ticks/steps) before spawning a new Banana
         this.bananaSpawnDelay = gameData.calculateCollectableSpawnTickDelay();
     }
 
+
     /**
-     * Used for checking if atleast one Banana touched the Player's basket Collider, then the Banana is collected and the Player's Score increases,
+     * Used for getting the Player instance which contains the current gameplay Statistic,
+     * which is created after a collectable Banana Entity has fallen off-screen
+     * @return returns the player as a Player Entity
+     */
+    public Player getPlayer() {
+        return player;
+    }
+
+    /**
+     * Used for checking if any of the Bananas touched the Player's basket Collider, then the Banana is collected and the Player's Score increases,
      * it is also responsible for checking whether any Banana has fallen off-screen, then the Game ends
      * @param gameData data of the Game
      */
@@ -69,11 +102,16 @@ public class GameScene implements DrawableAndUpdatable {
                 bananas.remove(i);
                 i--;
 
-                //TODO: Game over
-                System.out.println("Game over!");
+                //Create a new Player Statistic to log the current Date and Time
+                player.setPlayerStatistic(new Statistic(gameData.getPlayerScoreData(), gameData.getChosenInputMethod()));
+                System.out.println(player.getPlayerStatistic());
+
+                //Set the GameState to be GameState.GAME_LOST (GameOver)
+                gameData.changeGameState(GameState.GAME_LOST);
             }
         }
     }
+
 
     /**
      * Used for updating the GameScene at a fixed time step,
@@ -82,23 +120,35 @@ public class GameScene implements DrawableAndUpdatable {
      */
     @Override
     public void update(GameData gameData) {
-        spawnUpdateCounter++;
-
-        this.bg.update(gameData);
-        this.score.update(gameData);
-
-        this.player.update(gameData);
-
-        if (spawnUpdateCounter >= bananaSpawnDelay) {
-            spawnUpdateCounter = 0;
-            bananas.add(new Banana(gameData));
+        if (pendingReset) {
+            reset(gameData);
+            this.pendingReset = false;
         }
 
-        for (Banana banana : bananas) {
-            banana.update(gameData);
+        if (gameData.getKeyHandler().hasEscapePressed()) {
+            gameData.togglePause();
         }
 
-        bananaChecking(gameData);
+        //If the current GameState is GAME_MAIN => the GameState is not GAME_PAUSED/GAME_LOST
+        if (gameData.getGameState() == GameState.GAME_MAIN) {
+            spawnUpdateCounter++;
+
+            this.bg.update(gameData);
+            this.score.update(gameData);
+
+            this.player.update(gameData);
+
+            if (spawnUpdateCounter >= bananaSpawnDelay) {
+                spawnUpdateCounter = 0;
+                bananas.add(new Banana(gameData));
+            }
+
+            for (Banana banana : bananas) {
+                banana.update(gameData);
+            }
+
+            bananaChecking(gameData);
+        }
     }
 
     /**

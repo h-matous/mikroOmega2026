@@ -2,6 +2,8 @@ package game.renderable.entity;
 
 import game.data.InputMethod;
 import game.data.PlayerAnimationData;
+import game.data.statistics.Statistic;
+import game.screen.StatsScreen;
 import game.utilities.Animation;
 import game.data.Direction;
 import game.utilities.input.KeyHandler;
@@ -22,6 +24,8 @@ public class Player extends Entity {
     private HashMap<Direction, Animation> animationMap;
     private Animation currentAnimation;
 
+    private Statistic playerStat;
+
     /**
      * Constructor sets the default values
      * @param gameData data of the Game
@@ -29,25 +33,33 @@ public class Player extends Entity {
     public Player(GameData gameData) {
         initializeAnimationMap(gameData);
 
-        setDefaultValues(gameData);
+        this.pos = new Vector2i();
+        this.size = new Vector2i();
+
+        this.vel = new Vector2i();
+
+        reset(gameData);
     }
 
     /**
      * Used for setting the default values of the Player
      * @param gameData data of the Game
      */
-    public void setDefaultValues(GameData gameData) {
+    public void reset(GameData gameData) {
         this.collider = gameData.getConstants().getCollider("player");
 
         this.scale = gameData.getScale();
-        this.size = new Vector2i(currentAnimation.getCurrentFrame().getWidth());
-        this.pos = new Vector2i((int) (gameData.getGameScreenSize().width / 2.0 - this.size.getX() * this.scale / 2.0), (int) (gameData.getGameScreenSize().height - this.size.getY() * this.scale - gameData.playerPxOffGameScreenGround()));
+        this.size.setBoth(currentAnimation.getCurrentFrame().getWidth());
+        this.pos.setBoth((int) (gameData.getGameScreenSize().width / 2.0 - this.size.getX() * this.scale / 2.0), (int) (gameData.getGameScreenSize().height - this.size.getY() * this.scale - gameData.playerPxOffGameScreenGround()));
 
-        this.vel = new Vector2i();
+        this.vel.setBoth(0);
 
         this.rotation = 0;
 
         this.colliderEnabled = true;
+
+
+        playerStat = null;
     }
 
 
@@ -73,6 +85,21 @@ public class Player extends Entity {
         this.currentAnimation = animationMap.get(direction);
     }
 
+    /**
+     * Used for getting the Player's Statistic
+     * @return returns the playerStat as a Statistic
+     */
+    public Statistic getPlayerStatistic() {
+        return playerStat;
+    }
+
+    /**
+     * Used for setting the Player's Statistic
+     * @param playerStat the playerStat as a Statistic
+     */
+    public void setPlayerStatistic(Statistic playerStat) {
+        this.playerStat = playerStat;
+    }
 
     /**
      * Used for updating the Player Entity at a fixed time step,

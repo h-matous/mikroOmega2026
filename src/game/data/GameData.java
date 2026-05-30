@@ -1,6 +1,8 @@
 package game.data;
 
 import game.Game;
+import game.data.statistics.StatLoader;
+import game.data.statistics.StatManager;
 import game.utilities.input.KeyHandler;
 import game.texture.TextureManager;
 import game.utilities.Vector2d;
@@ -20,6 +22,8 @@ public class GameData {
     private final GameConstants gameConstants;
 
     private volatile GameState currentGameState;
+
+    private StatManager statManager;
 
     private final Dimension displayScreenSize;
     private final Vector2d displayScaling;
@@ -73,6 +77,16 @@ public class GameData {
         this.gameConstants = new GameConstants();
 
         this.currentGameState = gameConstants.getInitialGameState();
+
+        try {
+            //Try to load the Statistics
+            this.statManager = StatLoader.loadFromFile(gameConstants.getStatManagerFilePath());
+        }
+        catch (RuntimeException e) {
+            //If it is the first time execution new Statistics file will be created
+            this.statManager = StatManager.getFirstTimeExecutionInstance();
+            StatLoader.saveToFile(statManager, gameConstants.getStatManagerFilePath());
+        }
 
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         DisplayMode dm = gd.getDisplayMode();
@@ -152,6 +166,14 @@ public class GameData {
     public void changeGameState(GameState newGameState) {
         setGameState(newGameState);
         game.revalidateFromGameState(newGameState);
+    }
+
+    /**
+     * Used for getting the Statistic Manager which holds the Statistic database
+     * @return returns the Statistics as a StatManager
+     */
+    public StatManager getStatManager() {
+        return statManager;
     }
 
     /**
@@ -390,5 +412,26 @@ public class GameData {
      */
     public boolean shouldShowEntityBounds() {
         return showEntityBounds;
+    }
+
+    /**
+     * Used for toggling the pause of the gameplay
+     */
+    public void togglePause() {
+        if (currentGameState == GameState.GAME_LOST) {
+            return;
+        }
+
+        mouseHandler.reset();
+        keyHandler.reset();
+
+        switch (currentGameState) {
+            case GAME_MAIN:
+                changeGameState(GameState.GAME_PAUSE);
+                break;
+            case GAME_PAUSE:
+                changeGameState(GameState.GAME_MAIN);
+                break;
+        }
     }
 }

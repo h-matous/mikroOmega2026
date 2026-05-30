@@ -10,4 +10,5 @@ public enum GameState {
     GAME_MAIN,
     GAME_PAUSE,
     GAME_LOST,
+    EXIT
 }

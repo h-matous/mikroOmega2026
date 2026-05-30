@@ -21,6 +21,9 @@ public class GameConstants {
     //Initial GameState
     private GameState initialGameState;
 
+    //File path to the Statistics database
+    private String statManagerFilePath;
+
     //Targeted Updates Per Second
     private int targetUPS;
 
@@ -83,6 +86,9 @@ public class GameConstants {
 
         //Initial GameState
         this.initialGameState = GameState.TITLE_MAIN;
+
+        //File path to the Statistics
+        this.statManagerFilePath = "statistics.dat";
 
         //Target Updates Per Second
         this.targetUPS = 100;
@@ -161,7 +167,7 @@ public class GameConstants {
         this.collectableSpawningData = new CollectableSpawningData();
 
         //Semi-transparent Color for overlays
-        this.semiTransparentOverlayColor = new Color(0, 0, 0, 200);
+        this.semiTransparentOverlayColor = new Color(0, 0, 0, 150);
     }
 
     /**
@@ -178,6 +184,14 @@ public class GameConstants {
      */
     public GameState getInitialGameState() {
         return initialGameState;
+    }
+
+    /**
+     * Used for getting the file path to the StatManager Statistics database
+     * @return returns the file path as a String
+     */
+    public String getStatManagerFilePath() {
+        return statManagerFilePath;
     }
 
     /**

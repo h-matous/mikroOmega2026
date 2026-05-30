@@ -10,8 +10,8 @@ import java.awt.event.MouseMotionListener;
  * Used for getting the mouse inputs
  */
 public class MouseHandler implements MouseListener, MouseMotionListener {
-    private boolean hasMouseLeftClicked, hasMouseRightClicked, hasMouseWheelClicked;
-    private int mouseClickCount;
+    private volatile boolean hasMouseLeftClicked, hasMouseRightClicked, hasMouseWheelClicked;
+    private volatile int mouseClickCount;
 
     private final Vector2i mousePosition;
 
@@ -19,13 +19,20 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
      * Default constructor
      */
     public MouseHandler() {
+        this.mousePosition = new Vector2i();
+    }
+
+    /**
+     * Used for resetting Mouse values
+     */
+    public void reset() {
         this.hasMouseLeftClicked = false;
         this.hasMouseRightClicked = false;
         this.hasMouseWheelClicked = false;
 
         this.mouseClickCount = 0;
 
-        this.mousePosition = new Vector2i();
+        this.mousePosition.setBoth(0);
     }
 
     @Override

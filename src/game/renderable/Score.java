@@ -10,10 +10,10 @@ import java.awt.*;
  * it is sort of a wrapper over ScoreData
  */
 public class Score implements DrawableAndUpdatable {
-    private final ScoreData scoreData;
-    private final Dimension frameSize;
+    private ScoreData scoreData;
+    private Dimension frameSize;
 
-    private final Color color;
+    private Color color;
 
     /**
      * Constructor sets the default values
@@ -21,7 +21,16 @@ public class Score implements DrawableAndUpdatable {
      * @param frameSize size of the frame that the Score is being drawn to
      */
     public Score(ScoreData scoreData, Dimension frameSize) {
+        reset(scoreData, frameSize);
+    }
+
+    /**
+     * Used for resetting all values (including the ScoreData)
+     */
+    public void reset(ScoreData scoreData, Dimension frameSize) {
         this.scoreData = scoreData;
+        this.scoreData.reset();
+
         this.frameSize = frameSize;
 
 

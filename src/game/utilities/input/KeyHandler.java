@@ -7,16 +7,27 @@ import java.awt.event.KeyListener;
  * Used for getting the keyboard inputs
  */
 public class KeyHandler implements KeyListener {
-    private boolean upPressed, downPressed, leftPressed, rightPressed;
+    private volatile boolean upPressed, downPressed, leftPressed, rightPressed;
+
+    private volatile boolean escapePressed;
 
     /**
      * Default constructor
      */
     public KeyHandler() {
+        this.reset();
+    }
+
+    /**
+     * Used for resetting Keyboard keys pressed states
+     */
+    public void reset() {
         this.upPressed = false;
         this.downPressed = false;
         this.leftPressed = false;
         this.rightPressed = false;
+
+        this.escapePressed = false;
     }
 
     @Override
@@ -45,6 +56,9 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_D:
                 rightPressed = true;
                 break;
+            case KeyEvent.VK_ESCAPE:
+                escapePressed = true;
+                break;
         }
     }
 
@@ -68,6 +82,9 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_RIGHT:
             case KeyEvent.VK_D:
                 rightPressed = false;
+                break;
+            case KeyEvent.VK_ESCAPE:
+                escapePressed = false;
                 break;
         }
     }
@@ -102,5 +119,17 @@ public class KeyHandler implements KeyListener {
      */
     public boolean isRightPressed() {
         return rightPressed;
+    }
+
+
+    /**
+     * Used for checking if a Keyboard ESC press happened, after an escape key press it will hold the boolean value &bdquo;true&ldquo; until it is called and the true value is returned
+     * it consumes the value after calling
+     * @return returns a true boolean value if an ESC Keyboard Key press happened
+     */
+    public boolean hasEscapePressed() {
+        boolean result = escapePressed;
+        this.escapePressed = false;
+        return result;
     }
 }

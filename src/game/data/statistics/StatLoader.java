@@ -10,8 +10,9 @@ public class StatLoader {
      * Used for loading the saved user Statistics from a file
      * @param statisticsFileSavePath path to a file with the Statistics
      * @return returns an StatManager Object instance with the loaded Statistics
+     * @throws RuntimeException when the loading fails
      */
-    public static StatManager loadFromFile(String statisticsFileSavePath) {
+    public static StatManager loadFromFile(String statisticsFileSavePath) throws RuntimeException {
         StatManager statManager;
 
         try {
@@ -40,8 +41,9 @@ public class StatLoader {
      * Used for saving the current user Statistics to a file
      * @param statManager an instance of the Statistic Manager to be saved
      * @param statisticsFileSavePath path representing where to save the current user Statistics
+     * @throws RuntimeException when the saving fails
      */
-    public static void saveToFile(StatManager statManager, String statisticsFileSavePath) {
+    public static void saveToFile(StatManager statManager, String statisticsFileSavePath) throws RuntimeException {
         try {
             FileOutputStream fos = new FileOutputStream(statisticsFileSavePath);
             ObjectOutputStream oos = new ObjectOutputStream(fos);

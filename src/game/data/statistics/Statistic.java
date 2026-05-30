@@ -1,5 +1,6 @@
 package game.data.statistics;
 
+import game.data.InputMethod;
 import game.data.ScoreData;
 
 import java.io.Serializable;
@@ -13,7 +14,7 @@ import java.time.LocalTime;
 public class Statistic implements Comparable<Statistic>, Serializable {
     private String playerName;
     private ScoreData scoreData;
-    private String inputMethod;
+    private InputMethod inputMethod;
 
     private LocalDate localDate;
     private LocalTime localTime;
@@ -21,11 +22,25 @@ public class Statistic implements Comparable<Statistic>, Serializable {
     /**
      * Constructor for setting the default values and current LocalDate and LocalTime of the Statistic's creation
      * @param playerName player's name as a String
-     * @param scoreData player's scoreDate
-     * @param inputMethod player's chosen inputMethod
+     * @param scoreData player's scoreData
+     * @param inputMethod player's chosen InputMethod
      */
-    public Statistic(String playerName, ScoreData scoreData, String inputMethod) {
+    public Statistic(String playerName, ScoreData scoreData, InputMethod inputMethod) {
         this.playerName = playerName;
+        this.scoreData = scoreData;
+        this.inputMethod = inputMethod;
+
+        this.localDate = LocalDate.now();
+        this.localTime = LocalTime.now();
+    }
+
+    /**
+     * Constructor for settings the default values and current LocalDate and LocalTime of the Statistic's creation
+     * @param scoreData player's scoreData
+     * @param inputMethod player's chosen InputMethod
+     */
+    public Statistic(ScoreData scoreData, InputMethod inputMethod) {
+        this.playerName = null;
         this.scoreData = scoreData;
         this.inputMethod = inputMethod;
 
@@ -42,6 +57,14 @@ public class Statistic implements Comparable<Statistic>, Serializable {
     }
 
     /**
+     * Used for setting the user's chosen name
+     * @param playerName player's new name as a String
+     */
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+    /**
      * Used for getting the final ScoreData of the user's play through (gameplay)
      * @return returns the ScoreData holding the final score
      */
@@ -51,9 +74,9 @@ public class Statistic implements Comparable<Statistic>, Serializable {
 
     /**
      * Used for getting the input method of the user's play through (gameplay)
-     * @return returns the used input method as a String
+     * @return returns the used input method as an InputMethod
      */
-    public String getInputMethod() {
+    public InputMethod getInputMethod() {
         return inputMethod;
     }
 
@@ -82,5 +105,10 @@ public class Statistic implements Comparable<Statistic>, Serializable {
     @Override
     public int compareTo(Statistic o) {
         return this.scoreData.compareTo(o.scoreData);
+    }
+
+    @Override
+    public String toString() {
+        return playerName + ";" + scoreData + ";" + inputMethod + ";" + localDate + ";" + localTime;
     }
 }

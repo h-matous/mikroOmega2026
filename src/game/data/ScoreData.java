@@ -8,11 +8,17 @@ import java.io.Serializable;
 public class ScoreData implements Comparable<ScoreData>, Serializable {
     private int score;
 
-
     /**
      * Default constructor sets the score to zero
      */
     public ScoreData() {
+        reset();
+    }
+
+    /**
+     * Used for resetting the scoreData
+     */
+    public void reset() {
         this.score = 0;
     }
 
@@ -48,5 +54,10 @@ public class ScoreData implements Comparable<ScoreData>, Serializable {
     @Override
     public int compareTo(ScoreData o) {
         return this.score - o.score;
+    }
+
+    @Override
+    public String toString() {
+        return Integer.toString(this.score);
     }
 }

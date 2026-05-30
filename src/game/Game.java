@@ -55,13 +55,13 @@ public class Game {
             return;
         }
 
-        //TODO: Complete
         System.out.println(state);
-
 
         //State machine
         switch (state) {
             case TITLE_MAIN:
+                gameScreen.stopThread();
+
                 titleScreen.setVisible(true);
                 gameScreen.setVisible(false);
                 statsScreen.setVisible(false);
@@ -107,13 +107,36 @@ public class Game {
                 gameScreen.setVisible(true);
                 statsScreen.setVisible(false);
 
+                gameScreen.showGameplay();
+
                 gameScreen.startThread();
                 break;
 
             case GAME_PAUSE:
+                titleScreen.stopThread();
+
+                titleScreen.setVisible(false);
+                gameScreen.setVisible(true);
+                statsScreen.setVisible(false);
+
+                gameScreen.showPauseMenu();
+
+                gameScreen.startThread();
                 break;
 
             case GAME_LOST:
+                titleScreen.stopThread();
+
+                titleScreen.setVisible(false);
+                gameScreen.setVisible(true);
+                statsScreen.setVisible(false);
+
+                gameScreen.showGameOverMenu();
+
+                gameScreen.startThread();
+                break;
+            case EXIT:
+                System.exit(0);
                 break;
         }
     }
