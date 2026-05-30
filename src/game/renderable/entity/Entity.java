@@ -7,7 +7,9 @@ import game.data.GameData;
 
 import java.awt.*;
 
-
+/**
+ * The class Entity implements the DrawableAndUpdatable (renderable) interface, and it represents an Entity that can move, be transformed and collide
+ */
 public abstract class Entity implements DrawableAndUpdatable {
     protected Vector2i pos;
     protected float scale;
@@ -19,7 +21,11 @@ public abstract class Entity implements DrawableAndUpdatable {
     protected Collider collider;
     protected boolean colliderEnabled;
 
-
+    /**
+     * Used for checking if this Entity's Collider overlaps with other Entity's Collider
+     * @param other the other Entity to check against
+     * @return returns a boolean corresponding to the collision
+     */
     public boolean collidesWith(Entity other) {
         if (this.colliderEnabled && other.colliderEnabled) {
             //For axis X
@@ -49,24 +55,38 @@ public abstract class Entity implements DrawableAndUpdatable {
         return false;
     }
 
+    /**
+     * Used for updating the Entity at a fixed time step
+     * @param gameData data of the Game
+     */
     @Override
     public void update(GameData gameData) {
 
     }
 
+    /**
+     * Used for drawing the Entity's bounds
+     * @param gfx Graphics2D context
+     * @param gameData data of the Game
+     */
     @Override
     public void draw(Graphics2D gfx, GameData gameData) {
-        if (gameData.getConstants().shouldShowEntityBounds()) {
+        if (gameData.shouldShowEntityBounds()) {
             this.drawBounds(gfx, gameData);
         }
 
     }
 
+    /**
+     * Used for drawing all the Entity's bounds
+     * @param gfx Graphics2D context
+     * @param gameData data of the Game
+     */
     protected void drawBounds(Graphics2D gfx, GameData gameData) {
         gfx.setColor(Color.BLACK);
 
 
-        if (rotation != 0 && !gameData.getConstants().isEntityRotationDisabled()) {
+        if (rotation != 0) {
             double rotationRadians = Math.toRadians(rotation);
             double sinOfRotation = Math.sin(rotationRadians);
             double cosOfRotation = Math.cos(rotationRadians);
@@ -107,14 +127,24 @@ public abstract class Entity implements DrawableAndUpdatable {
         }
     }
 
+    /**
+     * Used for enabling this Entity's Collider
+     */
     public void enableCollider() {
         this.colliderEnabled = true;
     }
 
+    /**
+     * Used for disabling this Entity's Collider
+     */
     public void disableCollider() {
         this.colliderEnabled = false;
     }
 
+    /**
+     * Used for checking whether this Entity's Collider
+     * @return returns a boolean if the Collider is enabled
+     */
     public boolean isColliderEnabled() {
         return colliderEnabled;
     }

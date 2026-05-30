@@ -1,22 +1,35 @@
 package game.data;
 
-import game.utilities.Direction;
 import game.utilities.Vector2d;
 import game.utilities.Vector2i;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 
 
+/**
+ * The class GameConstants holds information about how the game should behave, feel and look.
+ * It stores values that will not be changed during the runtime of the program
+ */
 public class GameConstants {
+    //Game name
+    private String gameName;
+
+    //Initial GameState
+    private GameState initialGameState;
+
+    //Targeted Updates Per Second
     private int targetUPS;
 
     private float scaleCoefficient;
 
+    //Screen size coefficients
     private Vector2d gameScreenSizePercentage;
     private Vector2d titleScreenSizePercentage;
+    private Vector2d statsScreenSizePercentage;
 
     //Textures
     private List<String> texturesToLoad;
@@ -30,10 +43,12 @@ public class GameConstants {
     //Background
     private AnimatedBackgroundData animatedBackgroundData;
 
+    //Initial InputMethod
+    private InputMethod initialInputMethod;
 
     //Velocities
-    private int initialPlayerWalkingVel;
-    private int initialCollectableFallingVel;
+    private int initialPlayerWalkingSpeed;
+    private int initialCollectableFallingSpeed;
 
     private int maxCollectableRotationSpeed;
 
@@ -49,19 +64,26 @@ public class GameConstants {
     private CollectableSpawningData collectableSpawningData;
 
 
-    //When rotation is disabled, it may yield better performance
-    private boolean disableEntityRotation;
+    private Color semiTransparentOverlayColor;
 
-    //Shows Entity bounds for debugging purposes
-    private boolean showEntityBounds;
-
-
-
+    /**
+     * Constructor that loads the constants
+     */
     public GameConstants() {
         loadDefaults();
     }
 
+
+    /**
+     * Used for loading default constant values for tuned for optimal results
+     */
     public void loadDefaults() {
+        //Game name
+        this.gameName = "Monkey Banana Catch!";
+
+        //Initial GameState
+        this.initialGameState = GameState.TITLE_MAIN;
+
         //Target Updates Per Second
         this.targetUPS = 100;
 
@@ -71,6 +93,7 @@ public class GameConstants {
         //Fraction of the users screen resolution
         this.gameScreenSizePercentage = new Vector2d(0.5, 0.8);
         this.titleScreenSizePercentage = new Vector2d(0.4, 0.6);
+        this.statsScreenSizePercentage = new Vector2d(0.4, 0.5);
 
 
         //Textures
@@ -90,7 +113,7 @@ public class GameConstants {
 
         //Colliders
         this.colliderMap = new HashMap<>();
-        colliderMap.put("player", new Collider(new Vector2i(20, 26), new Vector2i(24, 38)));
+        colliderMap.put("player", new Collider(new Vector2i(20, 26), new Vector2i(24, 13)));
 
         colliderMap.put("banana-1", new Collider(new Vector2i(26, 24), new Vector2i(13, 15)));
         colliderMap.put("banana-2", new Collider(new Vector2i(27, 24), new Vector2i(10, 14)));
@@ -109,9 +132,12 @@ public class GameConstants {
         //Background
         this.animatedBackgroundData = new AnimatedBackgroundData();
 
-        //Velocities
-        this.initialPlayerWalkingVel = 8;
-        this.initialCollectableFallingVel = 5;
+        //Initial InputMethod
+        this.initialInputMethod = InputMethod.KEYBOARD;
+
+        //Velocities/speeds
+        this.initialPlayerWalkingSpeed = 8;
+        this.initialCollectableFallingSpeed = 5;
 
         this.maxCollectableRotationSpeed = 5;
 
@@ -128,35 +154,86 @@ public class GameConstants {
 
         //When using a still Texture instead, frameCount is expected to be 1
 
+        //Initial Player Direction, if Player Animation is disabled Texture will correspond with this initial Direction
         this.playerInitialDirection = Direction.IDLE;
 
+        //Collectable spawning data
         this.collectableSpawningData = new CollectableSpawningData();
 
-        this.disableEntityRotation = false;
-        this.showEntityBounds = false;
+        //Semi-transparent Color for overlays
+        this.semiTransparentOverlayColor = new Color(0, 0, 0, 200);
     }
 
+    /**
+     * Used for getting the name of the Game
+     * @return returns the Game name as a String
+     */
+    public String getGameName() {
+        return gameName;
+    }
+
+    /**
+     * Used for getting the initial GameState
+     * @return returns the initial state as a GameState Enum value
+     */
+    public GameState getInitialGameState() {
+        return initialGameState;
+    }
+
+    /**
+     * Used for getting the target Updates Per Second for fixed-step physics updating
+     * @return returns the amount of updates per second as an int
+     */
     public int getTargetUPS() {
         return targetUPS;
     }
 
+    /**
+     * Used for calculating the rendering scale, smaller value corresponds to bigger rendered scenes and Entities
+     * @return return the render scale coefficient as a float
+     */
     public float getScaleCoefficient() {
         return scaleCoefficient;
     }
 
+    /**
+     * Used for getting the percentage of the user's display the GameScreen window should take up
+     * @return returns a percentage as a Vector2D
+     */
     public Vector2d getGameScreenSizePercentage() {
         return gameScreenSizePercentage;
     }
 
+    /**
+     * Used for getting the percentage of the user's display the TitleScreen window should take up
+     * @return returns a percentage as a Vector2D
+     */
     public Vector2d getTitleScreenSizePercentage() {
         return titleScreenSizePercentage;
     }
 
+    /**
+     * Used for getting the percentage of the user's display the StatScreen window should take up
+     * @return returns a percentage as a Vector2D
+     */
+    public Vector2d getStatsScreenSizePercentage() {
+        return statsScreenSizePercentage;
+    }
 
+
+    /**
+     * Used for getting all the Texture names to be loaded
+     * @return returns a List of Strings corresponding to the Texture file names
+     */
     public List<String> getTexturesToLoad() {
         return texturesToLoad;
     }
 
+    /**
+     * Used for getting the collider for an Entity
+     * @param key an ID represented as a String corresponding to the Entity
+     * @return returns a Collider if the key exists
+     */
     public Collider getCollider(String key) {
         Collider collider = colliderMap.get(key);
 
@@ -183,23 +260,50 @@ public class GameConstants {
         throw new IllegalArgumentException("CollectibleScore name doesn't exist: " + key);
     }
 
+    /**
+     * Used for getting the AnimatedBackgroundData containing mostly information about the BackgroundDroplet and colors
+     * @return returns the AnimatedBackgroundData
+     */
     public AnimatedBackgroundData getAnimatedBackgroundData() {
         return animatedBackgroundData;
     }
 
-    public int getInitialPlayerWalkingVel() {
-        return initialPlayerWalkingVel;
+    /**
+     * Used for getting the initial InputMethod to use during the gameplay of the Game
+     * @return returns the InputMethod enum value representing the initial input method
+     */
+    public InputMethod getInitialInputMethod() {
+        return initialInputMethod;
     }
 
-    public int getInitialCollectableFallingVel() {
-        return initialCollectableFallingVel;
+    /**
+     * Used for getting the initial walking speed of the player
+     * @return returns an int representing the initial amount of units the player can move by every player Entity update
+     */
+    public int getInitialPlayerWalkingSpeed() {
+        return initialPlayerWalkingSpeed;
     }
 
+    /**
+     * Used for getting the initial collectable falling speed
+     * @return returns an int representing the initial amount of units to move the falling collectable Entity by every collectable Entity update
+     */
+    public int getInitialCollectableFallingSpeed() {
+        return initialCollectableFallingSpeed;
+    }
+
+    /**
+     * Used for getting the maximum rotation speed of collectable Entities
+     * @return returns an int representing a maximum amount of degrees to rotate per collectable Entity update
+     */
     public int getMaxCollectableRotationSpeed() {
         return maxCollectableRotationSpeed;
     }
 
-
+    /**
+     * Used for getting a coefficient as a part of a calculation which determines how many pixels should the player be above ground (bottom of GameScreen)
+     * @return returns an int representing the pixel amount
+     */
     public float getPlayerPercentOfGameScreenHeightAboveGround() {
         return playerPercentOfGameScreenHeightAboveGround;
     }
@@ -244,18 +348,10 @@ public class GameConstants {
     }
 
     /**
-     * Used for checking if the rotation of Entities is disabled (only for rendering), disabling it could yield in better performance
-     * @return returns the boolean if Entity rotation is disabled
+     * Used for getting the semi-transparent Color for overlays
+     * @return returns the overlay color as a Color
      */
-    public boolean isEntityRotationDisabled() {
-        return disableEntityRotation;
-    }
-
-    /**
-     * Used for checking if Entity bounds should be shown, useful when debugging
-     * @return returns the boolean if Entity bounds should be shown
-     */
-    public boolean shouldShowEntityBounds() {
-        return showEntityBounds;
+    public Color getSemiTransparentOverlayColor() {
+        return semiTransparentOverlayColor;
     }
 }

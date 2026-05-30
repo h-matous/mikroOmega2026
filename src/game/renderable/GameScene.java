@@ -9,6 +9,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The GameScene class implements the DrawableAndUpdatable interface, and it holds and manages the whole gameplay happening on the GameScreen
+ */
 public class GameScene implements DrawableAndUpdatable {
 
     private final Player player;
@@ -20,6 +23,12 @@ public class GameScene implements DrawableAndUpdatable {
     private int spawnUpdateCounter;
     private int bananaSpawnDelay;
 
+    //TODO: game pausing
+
+    /**
+     * Constructor sets the default value
+     * @param gameData data of the Game
+     */
     public GameScene(GameData gameData) {
         this.player = new Player(gameData);
 
@@ -29,14 +38,17 @@ public class GameScene implements DrawableAndUpdatable {
 
         this.bg = new AnimatedBackground(gameData, gameData.getConstants().getAnimatedBackgroundData(), gameData.getGameScreenSize());
 
-
         //Counts how many updates have occured from the last Banana spawn
         this.spawnUpdateCounter = 0;
         //Current number of updates (ticks/steps) before spawning a new Banana
         this.bananaSpawnDelay = gameData.calculateCollectableSpawnTickDelay();
     }
 
-
+    /**
+     * Used for checking if atleast one Banana touched the Player's basket Collider, then the Banana is collected and the Player's Score increases,
+     * it is also responsible for checking whether any Banana has fallen off-screen, then the Game ends
+     * @param gameData data of the Game
+     */
     private void bananaChecking(GameData gameData) {
         //For every Banana in bananas
         for (int i = 0; i < bananas.size(); i++) {
@@ -63,6 +75,11 @@ public class GameScene implements DrawableAndUpdatable {
         }
     }
 
+    /**
+     * Used for updating the GameScene at a fixed time step,
+     * responsible for managing the gameplay realtime
+     * @param gameData data of the Game
+     */
     @Override
     public void update(GameData gameData) {
         spawnUpdateCounter++;
@@ -84,6 +101,11 @@ public class GameScene implements DrawableAndUpdatable {
         bananaChecking(gameData);
     }
 
+    /**
+     * Used for drawing all the contents of the GameScene
+     * @param gfx Graphics2D context
+     * @param gameData data of the Game
+     */
     @Override
     public void draw(Graphics2D gfx, GameData gameData) {
         this.bg.draw(gfx, gameData);

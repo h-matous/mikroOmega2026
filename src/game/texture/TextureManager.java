@@ -14,9 +14,15 @@ import java.util.HashMap;
 import java.util.List;
 
 
+/**
+ * The TextureManager class is used for managing and holding the Textures for Entities
+ */
 public class TextureManager {
     private static Texture DEFAULT_TEXTURE;
 
+    /**
+     * Used for initialising the default Texture that gets returned instead if the loading of a Texture fails
+     */
     private static void initDefaultTexture() {
         if (DEFAULT_TEXTURE == null) {
             final int width = 64;
@@ -38,10 +44,14 @@ public class TextureManager {
         }
     }
 
-
+    //HashMap holding all the Textures
     private final HashMap<String, Texture> textureMap;
 
 
+    /**
+     * Constructor is responsible for loading all the Textures
+     * @param gameConstants gameConstants containing the relative paths to all Entity Textures
+     */
     public TextureManager(GameConstants gameConstants) {
         initDefaultTexture();
 
@@ -64,6 +74,11 @@ public class TextureManager {
         }
     }
 
+    /**
+     * Used for getting the Texture for an Entity
+     * @param key an ID represented as a String corresponding to one of the Entity's Textures
+     * @return returns a Texture if the key exists
+     */
     public Texture getTexture(String key) {
         Texture texture = textureMap.get(key);
 
@@ -74,6 +89,12 @@ public class TextureManager {
         throw new IllegalArgumentException("Texture name doesn't exist: " + key);
     }
 
+    /**
+     * Used for loading a Texture with an InputStream
+     * @param input an InputStream to read the Texture with
+     * @return returns a Texture if successful
+     * @throws IOException throws an IOException if an error occurred while reading or the image format is unsupported
+     */
     private Texture loadTexture(InputStream input) throws IOException {
         BufferedImage image = ImageIO.read(input);
 
@@ -84,6 +105,12 @@ public class TextureManager {
         return new Texture(image);
     }
 
+
+    /**
+     * Used for loading a Texture from resources
+     * @param resourcePath path to the Texture represented as a String
+     * @return returns a loaded Texture, will return a default Texture if loading fails
+     */
     private Texture loadTextureFromResource(String resourcePath) {
         try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
             if (is == null) {
@@ -100,6 +127,11 @@ public class TextureManager {
         return DEFAULT_TEXTURE;
     }
 
+    /**
+     * Used for loading a Texture from a file system
+     * @param filePath path to the Texture represented as a String
+     * @return returns a loaded Texture, will return a default Texture if loading fails
+     */
     private Texture loadTextureFromFile(String filePath) {
         Path path = Path.of(filePath);
 
@@ -110,6 +142,5 @@ public class TextureManager {
             System.out.println("Failed to load file: " + filePath + " - " + e.getMessage());
             return DEFAULT_TEXTURE;
         }
-
     }
 }

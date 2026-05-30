@@ -7,6 +7,9 @@ import game.data.GameData;
 
 import java.awt.*;
 
+/**
+ * The class Banana is an extension of the Entity class, it represents a falling Banana collectable
+ */
 public class Banana extends Entity {
     private int fallingVel;
 
@@ -17,11 +20,18 @@ public class Banana extends Entity {
 
     private int rotationSpeed;
 
-
+    /**
+     * Constructor sets the default values
+     * @param gameData data of the Game
+     */
     public Banana(GameData gameData) {
         setDefaultValues(gameData);
     }
 
+    /**
+     * Used for setting the default values of the Banana
+     * @param gameData data of the Game
+     */
     public void setDefaultValues(GameData gameData) {
         String id = "banana-" + gameData.getRnd().nextInt(1, gameData.getBananaVariationsCount() + 1);
 
@@ -44,7 +54,7 @@ public class Banana extends Entity {
         this.vel = new Vector2i();
 
 
-        this.fallingVel = gameData.getCurrentCollectibleFallingVel();
+        this.fallingVel = gameData.getCurrentCollectableFallingSpeed();
 
         this.rotation = 0;
 
@@ -60,27 +70,49 @@ public class Banana extends Entity {
         }
     }
 
+    /**
+     * Used for getting the score this collectable Banana should give to the Player after collecting
+     * @return returns an int representing the player score offset
+     */
     public int getCollectibleScore() {
         return collectibleScore;
     }
 
+    /**
+     * Used for checking whether the collectable Banana has fallen off-screen
+     * @param gameData data of the Game
+     * @return returns a boolean representing the condition
+     */
     public boolean hasFallenOffScreen(GameData gameData) {
         return this.pos.getY() + this.collider.getPos().getY() > gameData.getGameScreenSize().height;
     }
 
+    /**
+     * Used for updating the Banana Entity at a fixed time step,
+     * the Banana collectable Entity is rotated and falls to the ground
+     * @param gameData data of the Game
+     */
     @Override
     public void update(GameData gameData) {
         super.update(gameData);
 
         pos.add(0, fallingVel);
-        rotation = rotation + rotationSpeed;
+
+        if (!gameData.isCollectableRotationDisabled()) {
+            rotation = rotation + rotationSpeed;
+        }
     }
 
+    /**
+     * Used for drawing the collectable Banana Entity
+     * @param gfx Graphics2D context
+     * @param gameData data of the Game
+     */
     @Override
     public void draw(Graphics2D gfx, GameData gameData) {
         super.draw(gfx, gameData);
 
-        if (!gameData.getConstants().isEntityRotationDisabled()) {
+        if (!gameData.isCollectableRotationDisabled()) {
             gfx.drawImage(this.texture.getRotatedInstance(rotation).getImage(), pos.getX(), pos.getY(), (int) (size.getX() * scale), (int) (size.getY() * scale), null);
         }
         else {

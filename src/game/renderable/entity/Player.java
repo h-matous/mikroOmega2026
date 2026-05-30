@@ -1,9 +1,10 @@
 package game.renderable.entity;
 
+import game.data.InputMethod;
 import game.data.PlayerAnimationData;
 import game.utilities.Animation;
-import game.utilities.Direction;
-import game.utilities.KeyHandler;
+import game.data.Direction;
+import game.utilities.input.KeyHandler;
 import game.texture.TextureManager;
 import game.utilities.Vector2i;
 import game.data.GameData;
@@ -11,6 +12,9 @@ import game.data.GameData;
 import java.awt.*;
 import java.util.HashMap;
 
+/**
+ * The class Player is an extension of the Entity class, it represents a Player
+ */
 public class Player extends Entity {
 
     private Direction direction;
@@ -18,13 +22,20 @@ public class Player extends Entity {
     private HashMap<Direction, Animation> animationMap;
     private Animation currentAnimation;
 
-
+    /**
+     * Constructor sets the default values
+     * @param gameData data of the Game
+     */
     public Player(GameData gameData) {
         initializeAnimationMap(gameData);
 
         setDefaultValues(gameData);
     }
 
+    /**
+     * Used for setting the default values of the Player
+     * @param gameData data of the Game
+     */
     public void setDefaultValues(GameData gameData) {
         this.collider = gameData.getConstants().getCollider("player");
 
@@ -40,7 +51,10 @@ public class Player extends Entity {
     }
 
 
-
+    /**
+     * Used to initialize the Player's Animation HashMap
+     * @param gameData data of the Game
+     */
     public void initializeAnimationMap(GameData gameData) {
         animationMap = new HashMap<>();
 
@@ -60,7 +74,12 @@ public class Player extends Entity {
     }
 
 
-
+    /**
+     * Used for updating the Player Entity at a fixed time step,
+     * the Player is moved accordingly after reacting to the chosen input method,
+     * the Animation is also updated if the Player Animation is enabled
+     * @param gameData data of the Game
+     */
     @Override
     public void update(GameData gameData) {
         super.update(gameData);
@@ -68,29 +87,39 @@ public class Player extends Entity {
         direction = Direction.IDLE;
         vel.setBoth(0 ,0);
 
-        KeyHandler keyH = gameData.getKeyHandler();
+        //TODO: player controller for MOUSE InputMethod
+        if (gameData.getChosenInputMethod() == InputMethod.KEYBOARD) {
+            KeyHandler keyH = gameData.getKeyHandler();
 
+            if (keyH.isLeftPressed() && this.pos.getX() + this.collider.getPos().getX() * this.scale >= 0) {
+                direction = Direction.LEFT;
+                vel.add(direction.getVector());
+            }
+            if (keyH.isRightPressed() && this.pos.getX() + (this.collider.getPos().getX() + this.collider.getSize().getX()) * this.scale <= gameData.getGameScreenSize().width) {
+                direction = Direction.RIGHT;
+                vel.add(direction.getVector());
+            }
 
-        if (keyH.isLeftPressed() && this.pos.getX() + this.collider.getPos().getX() * this.scale >= 0) {
-            direction = Direction.LEFT;
-            vel.add(direction.getVector());
+            if (vel.getX() == 0) direction = Direction.IDLE;
+
+            vel.multiply(gameData.calculateCurrentPlayerWalkingVel());
         }
-        if (keyH.isRightPressed() && this.pos.getX() + (this.collider.getPos().getX() + this.collider.getSize().getX()) * this.scale <= gameData.getGameScreenSize().width) {
-            direction = Direction.RIGHT;
-            vel.add(direction.getVector());
-        }
 
-        if (vel.getX() == 0) direction = Direction.IDLE;
-
-        vel.multiply(gameData.getCurrentPlayerWalkingVel());
 
         pos.add(vel);
 
 
-        currentAnimation = animationMap.get(direction);
-        currentAnimation.update();
+        if (!gameData.isPlayerAnimationDisabled()) {
+            currentAnimation = animationMap.get(direction);
+            currentAnimation.update();
+        }
     }
 
+    /**
+     * Used for drawing the Player Entity
+     * @param gfx Graphics2D context
+     * @param gameData data of the Game
+     */
     @Override
     public void draw(Graphics2D gfx, GameData gameData) {
         super.draw(gfx, gameData);

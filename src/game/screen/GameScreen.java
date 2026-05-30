@@ -5,10 +5,17 @@ import game.data.GameData;
 
 import javax.swing.*;
 
+/**
+ * The class GameScreen extends RenderScreen and represents the JFrame in which the GameScene of the Game will be played
+ */
 public class GameScreen extends RenderScreen {
     private final GameScene gameScene;
 
-
+    /**
+     * Constructor sets the values
+     * @param gameData data of the Game
+     * @param gameScene GameScene renderable (DrawableAndUpdatable)
+     */
     public GameScreen(GameData gameData, GameScene gameScene) {
         super(gameData, new RenderPanel2D(gameData, gameData.getGameScreenSize(), gameScene, false));
 
@@ -17,14 +24,14 @@ public class GameScreen extends RenderScreen {
         initialize();
     }
 
+    /**
+     * Used for initializing the GameScreen
+     */
     private void initialize() {
-        //renderCanvas2D = new GameCanvas2D(gameData, gameLogic);
-
-        this.setContentPane(renderPanel2D);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        this.setTitle("Monkey Banana Catch!");
+        this.setTitle(gameData.getConstants().getGameName());
 
         this.setResizable(false);
         this.pack();

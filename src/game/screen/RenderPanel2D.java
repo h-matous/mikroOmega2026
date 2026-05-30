@@ -3,11 +3,18 @@ package game.screen;
 import game.renderable.DrawableAndUpdatable;
 import game.data.GameData;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.FileImageOutputStream;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 
+/**
+ * The RenderPanel2D is an extension of the JPanel class, it contains the gameLoop so it is also made to be on a thread other than Swing's EDT
+ */
 public class RenderPanel2D extends JPanel implements Runnable {
     private final int targetUPS;
 
@@ -23,18 +30,29 @@ public class RenderPanel2D extends JPanel implements Runnable {
 
     private final DrawableAndUpdatable drawableAndUpdatable;
 
-    public RenderPanel2D(GameData gameData, Dimension frameSize, DrawableAndUpdatable drawableAndUpdatable, boolean disableListener) {
+    /**
+     * Constructor for setting the values
+     * @param gameData data of the game
+     * @param frameSize the size of the parent JFrame as a viewport
+     * @param drawableAndUpdatable any Object implementing this interface for updating and drawing to Graphics2D
+     * @param disableListeners if
+     */
+    public RenderPanel2D(GameData gameData, Dimension frameSize, DrawableAndUpdatable drawableAndUpdatable, boolean disableListeners) {
         super();
 
         this.gameData = gameData;
 
         this.targetUPS = this.gameData.getConstants().getTargetUPS();
 
+        this.setLayout(new BorderLayout());
+
         this.setDoubleBuffered(false);
         this.setPreferredSize(frameSize);
         this.setBackground(Color.BLACK);
 
-        if (!disableListener) {
+        if (!disableListeners) {
+            this.addMouseListener(gameData.getMouseHandler());
+            this.addMouseMotionListener(gameData.getMouseHandler());
             this.addKeyListener(gameData.getKeyHandler());
         }
         this.setFocusable(true);
@@ -50,7 +68,9 @@ public class RenderPanel2D extends JPanel implements Runnable {
     }
 
 
-
+    /**
+     * Method that will run as soon as the thread starts, holds the game loop
+     */
     @Override
     public void run() {
         final double updateInterval = 1000000000d / targetUPS; //time between each update in nanoseconds (100 UPS)
@@ -69,7 +89,7 @@ public class RenderPanel2D extends JPanel implements Runnable {
 
             accumulator = accumulator + deltaTime;
 
-            //Fixed timestep
+            //Fixed time step
             while (accumulator >= updateInterval) {
                 accumulator = accumulator - updateInterval;
 
@@ -78,6 +98,7 @@ public class RenderPanel2D extends JPanel implements Runnable {
 
             renderFrame();
 
+            //Panel Component repaint request
             this.repaint();
 
 
@@ -85,10 +106,14 @@ public class RenderPanel2D extends JPanel implements Runnable {
             Toolkit.getDefaultToolkit().sync();
 
 
-            restThread((long) ((updateInterval - accumulator) / 1_000_000));
+            restThread((long) ((updateInterval - accumulator) / 1000000));
         }
     }
 
+    /**
+     * Used for sleeping the thread for a certain amount of time (in milliseconds)
+     * @param sleepTimeMs time to sleep in milliseconds
+     */
     private void restThread(long sleepTimeMs) {
         if (sleepTimeMs > 1) {
             try {
@@ -101,15 +126,25 @@ public class RenderPanel2D extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * Calls the drawableAndUpdatable update synchronously at targetUPS per second
+     */
     public void update() {
         drawableAndUpdatable.update(gameData);
     }
 
+    /**
+     * Calls the drawableAndUpdatable draw asynchronously
+     * @param gfx Graphics2D of a buffer to draw to
+     */
     public void draw(Graphics2D gfx) {
         drawableAndUpdatable.draw(gfx, gameData);
     }
 
 
+    /**
+     * Renders the whole scene into the backBuffer and swaps the buffers
+     */
     public void renderFrame() {
         Graphics2D gfx = backBuffer.createGraphics();
 
@@ -131,6 +166,10 @@ public class RenderPanel2D extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * Paints the whole frontBuffer
+     * @param g the <code>Graphics</code> object to protect
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -140,10 +179,18 @@ public class RenderPanel2D extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * Used to set the running flag (can stop the game loop)
+     * @param running the new boolean that will determine if it continues to run
+     */
     public void setRunning(boolean running) {
         this.running = running;
     }
 
+    /**
+     * Used to get the state of the game loop (if it is currently running)
+     * @return returns a boolean that says if the game loop is currently running
+     */
     public boolean isRunning() {
         return running;
     }

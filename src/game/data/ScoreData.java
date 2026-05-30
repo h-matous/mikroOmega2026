@@ -1,9 +1,11 @@
 package game.data;
 
+import java.io.Serializable;
+
 /**
  * Class ScoreData is used for storing the current score as a numeric value
  */
-public class ScoreData {
+public class ScoreData implements Comparable<ScoreData>, Serializable {
     private int score;
 
 
@@ -36,5 +38,15 @@ public class ScoreData {
      */
     public void setScore(int score) {
         this.score = score;
+    }
+
+    /**
+     * Used for comparing ScoreData
+     * @param o the ScoreData object to be compared.
+     * @return returns a positive int if this is bigger, zero if equal, a negative int if this is smaller than o
+     */
+    @Override
+    public int compareTo(ScoreData o) {
+        return this.score - o.score;
     }
 }

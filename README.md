@@ -16,7 +16,7 @@ A simple 2D Java game about a monkey catching bananas falling from the sky, with
 
 ### 🖼 Example Gameplay
 <div align="center">
-<img src="example.png" alt="Example" width=40%>
+<img src="example.png" alt="Example gameplay screenshot" width=40%>
 </div>
 
 ## 🎮 Controls
