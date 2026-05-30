@@ -13,11 +13,11 @@ import java.time.LocalTime;
  */
 public class Statistic implements Comparable<Statistic>, Serializable {
     private String playerName;
-    private ScoreData scoreData;
-    private InputMethod inputMethod;
+    private final int score;
+    private final InputMethod inputMethod;
 
-    private LocalDate localDate;
-    private LocalTime localTime;
+    private final LocalDate localDate;
+    private final LocalTime localTime;
 
     /**
      * Constructor for setting the default values and current LocalDate and LocalTime of the Statistic's creation
@@ -27,7 +27,7 @@ public class Statistic implements Comparable<Statistic>, Serializable {
      */
     public Statistic(String playerName, ScoreData scoreData, InputMethod inputMethod) {
         this.playerName = playerName;
-        this.scoreData = scoreData;
+        this.score = scoreData.getScore();
         this.inputMethod = inputMethod;
 
         this.localDate = LocalDate.now();
@@ -41,7 +41,7 @@ public class Statistic implements Comparable<Statistic>, Serializable {
      */
     public Statistic(ScoreData scoreData, InputMethod inputMethod) {
         this.playerName = null;
-        this.scoreData = scoreData;
+        this.score = scoreData.getScore();
         this.inputMethod = inputMethod;
 
         this.localDate = LocalDate.now();
@@ -65,11 +65,11 @@ public class Statistic implements Comparable<Statistic>, Serializable {
     }
 
     /**
-     * Used for getting the final ScoreData of the user's play through (gameplay)
-     * @return returns the ScoreData holding the final score
+     * Used for getting the final score of the user's play through (gameplay)
+     * @return returns the score as an int
      */
-    public ScoreData getScoreData() {
-        return scoreData;
+    public int getScore() {
+        return score;
     }
 
     /**
@@ -96,6 +96,13 @@ public class Statistic implements Comparable<Statistic>, Serializable {
         return localTime;
     }
 
+    /**
+     * Used for showing the Statistics in a JTable
+     * @return returns this Static as an array of Objects
+     */
+    public Object[] toObjectArray() {
+        return new Object[]{playerName, score, inputMethod.getName(), localDate.toString(), localTime.toString()};
+    }
 
     /**
      * Used for comparing user Statistics
@@ -104,11 +111,11 @@ public class Statistic implements Comparable<Statistic>, Serializable {
      */
     @Override
     public int compareTo(Statistic o) {
-        return this.scoreData.compareTo(o.scoreData);
+        return this.score - o.score;
     }
 
     @Override
     public String toString() {
-        return playerName + ";" + scoreData + ";" + inputMethod + ";" + localDate + ";" + localTime;
+        return playerName + ";" + score + ";" + inputMethod + ";" + localDate + ";" + localTime;
     }
 }

@@ -3,13 +3,13 @@ package game.renderable.entity;
 import game.data.InputMethod;
 import game.data.PlayerAnimationData;
 import game.data.statistics.Statistic;
-import game.screen.StatsScreen;
 import game.utilities.Animation;
 import game.data.Direction;
 import game.utilities.input.KeyHandler;
 import game.texture.TextureManager;
 import game.utilities.Vector2i;
 import game.data.GameData;
+import game.utilities.input.MouseHandler;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -114,7 +114,6 @@ public class Player extends Entity {
         direction = Direction.IDLE;
         vel.setBoth(0 ,0);
 
-        //TODO: player controller for MOUSE InputMethod
         if (gameData.getChosenInputMethod() == InputMethod.KEYBOARD) {
             KeyHandler keyH = gameData.getKeyHandler();
 
@@ -130,6 +129,43 @@ public class Player extends Entity {
             if (vel.getX() == 0) direction = Direction.IDLE;
 
             vel.multiply(gameData.calculateCurrentPlayerWalkingVel());
+        }
+        else if (gameData.getChosenInputMethod() == InputMethod.MOUSE) {
+            MouseHandler mouseH = gameData.getMouseHandler();
+
+            int currentPlayerXPos = (int) (this.pos.getX() + this.collider.getPos().getX() * this.scale + this.collider.getSize().getX() / 2.0 * this.scale);
+            int requestedXPos = mouseH.getMousePosition().getX();
+
+            int deltaX = requestedXPos - currentPlayerXPos;
+            float currentMaxWalkingVel = gameData.calculateCurrentPlayerWalkingVel();
+
+            float divisionResult = Math.abs(deltaX / currentMaxWalkingVel);
+
+            /*
+            If the cursor is farther away from the centre of the player than the current maximum allowed walking velocity
+            then the velocity will be just equal to the maximum walking velocity, else the distance is smaller than the
+            maximum velocity => the velocity will be set to be a fraction of the maximum allowed walking velocity
+             */
+            if (divisionResult >= 1) {
+                vel.add((int) currentMaxWalkingVel, 0);
+            }
+            else {
+                vel.add((int) (divisionResult * currentMaxWalkingVel), 0);
+            }
+
+            if (deltaX > 0) {
+                vel.multiply(1);
+                direction = Direction.RIGHT;
+            }
+            else if (deltaX < 0) {
+                vel.multiply(-1);
+                direction = Direction.LEFT;
+            }
+            else {
+                vel.multiply(0);
+                direction = Direction.IDLE;
+            }
+
         }
 
 

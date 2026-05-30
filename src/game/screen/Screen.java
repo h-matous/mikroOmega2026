@@ -22,6 +22,7 @@ public class Screen extends JFrame {
 
     /**
      * Used for configuring the JLabels
+     * @param gameData data of the Game
      * @param label the JLabel to be configured
      * @param text text of the JLabel as a String
      */
@@ -39,6 +40,7 @@ public class Screen extends JFrame {
 
     /**
      * Used for configuring the JButtons
+     * @param gameData data of the Game
      * @param button the JButton to be configured
      * @param text text of the JButton as a String
      * @param actionListener action to perform after the button press
@@ -57,7 +59,25 @@ public class Screen extends JFrame {
     }
 
     /**
+     * Used for configuring the JTextFields
+     * @param gameData data of the Game
+     * @param textField the JTextField to be configured
+     * @param text initial text of the JTextField as a String
+     * @param actionListener action to perform after the button press
+     */
+    public static void configJTextField(GameData gameData, JTextField textField, String text, ActionListener actionListener) {
+        textField.setText(text);
+        textField.setFont(gameData.getLabelFont());
+        textField.setForeground(Color.WHITE);
+        textField.addActionListener(actionListener);
+        textField.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        textField.setOpaque(false);
+    }
+
+    /**
      * Used for configuring JCheckBoxes
+     * @param gameData data of the Game
      * @param checkBox the JCheckBox to be configured
      * @param text text of the JCheckBox as a String
      * @param actionListener action to perform after the checkBox toggle

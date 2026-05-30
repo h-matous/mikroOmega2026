@@ -1,5 +1,6 @@
 package game.data;
 
+
 import java.io.Serializable;
 
 /**
@@ -13,6 +14,15 @@ public class ScoreData implements Comparable<ScoreData>, Serializable {
      */
     public ScoreData() {
         reset();
+    }
+
+    /**
+     * Constructor sets the score to an existing value
+     * @param score the new score value as an int
+     */
+    public ScoreData(int score) {
+        reset();
+        this.score = score;
     }
 
     /**

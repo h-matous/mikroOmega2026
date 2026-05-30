@@ -114,6 +114,8 @@ public class GameConstants {
         texturesToLoad.add("/assets/banana-4.png");
         texturesToLoad.add("/assets/banana-5.png");
 
+        texturesToLoad.add("/assets/icon.png");
+
         //When loading Textures from resources, forward slash is at the beginning of the path
 
 

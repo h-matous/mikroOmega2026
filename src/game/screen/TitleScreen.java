@@ -6,10 +6,9 @@ import game.renderable.background.AnimatedBackground;
 import game.data.GameData;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EtchedBorder;
+
 import java.awt.*;
-import java.awt.event.ActionListener;
+
 
 /**
  * The class TitleScreen extends RenderScreen and represents the first JFrame which will be shown to the Player
@@ -84,6 +83,8 @@ public class TitleScreen extends RenderScreen {
         this.setResizable(false);
         this.pack();
 
+        this.setIconImage(gameData.getTexMngr().getTexture("icon").getImage());
+
         this.setLocationRelativeTo(null);
 
         this.setVisible(false);
@@ -117,14 +118,15 @@ public class TitleScreen extends RenderScreen {
 
         mainPanel.add(Box.createVerticalGlue());
         mainPanel.add(mp_gameLabel);
-        mainPanel.add(Box.createVerticalGlue());
+        mainPanel.add(Box.createVerticalStrut(150));
 
         mainPanel.add(mp_playButton);
         mainPanel.add(Box.createVerticalGlue());
         mainPanel.add(mp_statisticsButton);
         mainPanel.add(Box.createVerticalGlue());
         mainPanel.add(mp_settingsButton);
-        mainPanel.add(Box.createVerticalGlue());
+
+        mainPanel.add(Box.createVerticalStrut(150));
         mainPanel.add(mp_exitButton);
 
         mainPanel.add(Box.createVerticalGlue());

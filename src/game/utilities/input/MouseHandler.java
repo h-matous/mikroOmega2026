@@ -32,7 +32,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
         this.mouseClickCount = 0;
 
-        this.mousePosition.setBoth(0);
+        //this.mousePosition.setBoth(0);
     }
 
     @Override

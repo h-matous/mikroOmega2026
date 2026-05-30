@@ -4,6 +4,8 @@ import game.data.GameData;
 import game.data.GameState;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -13,10 +15,10 @@ import java.awt.event.WindowEvent;
  */
 public class StatsScreen extends Screen {
 
-    private DefaultListModel<String> model;
-    private JList<String> list;
+    private JTable table;
     private JScrollPane scrollPane;
-    private JTextField textField;
+
+    private JPanel statPanel;
 
     /**
      * Constructor sets the values
@@ -24,15 +26,6 @@ public class StatsScreen extends Screen {
      */
     public StatsScreen(GameData gameData) {
         super(gameData);
-
-        model = new DefaultListModel<>();
-        list = new JList<>(model);
-        scrollPane = new JScrollPane(list);
-        textField = new JTextField();
-
-        for (int i = 0; i < 100; i++) {
-            model.addElement(Integer.toString(i));
-        }
 
         initialize(gameData);
     }
@@ -42,6 +35,7 @@ public class StatsScreen extends Screen {
      * @param gameData data of the Game
      */
     private void initialize(GameData gameData) {
+
         this.setTitle("Statistics");
 
         this.setPreferredSize(gameData.getStatScreenSize());
@@ -49,31 +43,41 @@ public class StatsScreen extends Screen {
         //This window will get closed from changing the GameState in the Game class state machine
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-
         this.setLayout(new BorderLayout());
 
-        list.setBorder(BorderFactory.createLineBorder(Color.CYAN, 1, true));
 
-        scrollPane.setBorder(BorderFactory.createLineBorder(Color.RED, 1, false));
+        //JTable with the Statistics database
+        table = new JTable();
+        reloadTable();
+
+        table.setFillsViewportHeight(true);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        table.setRowHeight(20);
+
+        table.setShowGrid(false);
+        table.setIntercellSpacing(new Dimension(0, 0));
+
+        table.setDefaultEditor(Object.class, null);
+
+        JTableHeader tableHeader = table.getTableHeader();
+
+        tableHeader.setReorderingAllowed(false);
+        tableHeader.setResizingAllowed(false);
+
+        tableHeader.setFont(gameData.getLabelFont());
+
+
+        //JScrollPane holds the JTable
+        scrollPane = new JScrollPane();
+        scrollPane.setViewportView(table);
+
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
-        this.add(scrollPane, BorderLayout.CENTER);
-
-        JButton button = new JButton("Add");
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(button, BorderLayout.EAST);
-
-        textField.setText("Type here");
-        panel.add(textField, BorderLayout.CENTER);
-
-        button.addActionListener(e -> {
-            String text = textField.getText();
-            if (!text.isBlank()) {
-                model.addElement(text);
-                textField.setText("");
-            }
-        });
+        //Statistics JPanel that holds everything
+        statPanel = new JPanel(new BorderLayout());
+        statPanel.add(scrollPane, BorderLayout.CENTER);
 
 
         this.addWindowListener(new WindowAdapter() {
@@ -93,13 +97,33 @@ public class StatsScreen extends Screen {
         });
 
 
-        this.add(panel, BorderLayout.SOUTH);
+        this.add(statPanel, BorderLayout.CENTER);
+
 
         this.setResizable(false);
         this.pack();
 
+        this.setIconImage(gameData.getTexMngr().getTexture("icon").getImage());
+
         this.setLocationRelativeTo(null);
 
         this.setVisible(false);
+    }
+
+
+    /**
+     * Used for reloading the Statistics database data set
+     * called
+     */
+    public void reloadTable() {
+        final String[] columnNames = {"Name", "Score", "Input", "Date", "Time"};
+        table.setModel(new DefaultTableModel(gameData.getStatManager().toObject2DArray(), columnNames) {
+            /*
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+            */
+        });
     }
 }

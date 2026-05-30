@@ -1,6 +1,7 @@
 package game.screen;
 
 import game.data.GameState;
+import game.data.statistics.Statistic;
 import game.renderable.GameScene;
 import game.data.GameData;
 
@@ -59,6 +60,7 @@ public class GameScreen extends RenderScreen {
     //Needs to be on the class scope so it can be disabled later
     JButton pbp_pauseButton;
 
+    JButton gop_statisticsButton;
     /**
      * Constructor sets the values
      * @param gameData data of the Game
@@ -90,6 +92,9 @@ public class GameScreen extends RenderScreen {
         layeredPane.add(pauseButtonPanel, Integer.valueOf(1));
         layeredPane.add(gameOverPanel, Integer.valueOf(2));
 
+        pausePanel.setFocusable(false);
+        pauseButtonPanel.setFocusable(false);
+
         pausePanel.setVisible(false);
         pauseButtonPanel.setVisible(false);
         gameOverPanel.setVisible(false);
@@ -103,6 +108,8 @@ public class GameScreen extends RenderScreen {
 
         this.setResizable(false);
         this.pack();
+
+        this.setIconImage(gameData.getTexMngr().getTexture("icon").getImage());
 
         this.setLocationRelativeTo(null);
 
@@ -142,6 +149,7 @@ public class GameScreen extends RenderScreen {
         pbp_pauseButton = new JButton();
 
         configJButton(gameData, pbp_pauseButton, "||", x->{gameData.togglePause();});
+        pbp_pauseButton.setFocusable(false);
 
         pbp_pauseButton.setPreferredSize(new Dimension(50, 50));
 
@@ -166,8 +174,29 @@ public class GameScreen extends RenderScreen {
         //Resets the gameScene
         configJButton(gameData, gop_restartButton, "Restart", x->{gameScene.requestReset();gameData.changeGameState(GameState.GAME_MAIN);});
 
-        JButton gop_statisticsButton = new JButton();
-        configJButton(gameData, gop_statisticsButton, "Add gameplay to Statistics", x->{System.out.println("stat not logged");});
+        JTextField gop_nameTextField = new JTextField(20);
+        configJTextField(gameData, gop_nameTextField, "", x->{});
+        gop_nameTextField.setMaximumSize(gop_nameTextField.getPreferredSize());
+
+        gop_statisticsButton = new JButton();
+        configJButton(gameData, gop_statisticsButton, "Save Score", x->{
+            String name = gop_nameTextField.getText().trim();
+
+            if (!name.isBlank()) {
+                Statistic playerStatistic = gameScene.getPlayer().getPlayerStatistic();
+
+                if (playerStatistic != null) {
+                    gameScene.getPlayer().setPlayerStatistic(null);
+                    playerStatistic.setPlayerName(name);
+                    gameData.getStatManager().addStatistic(gameData.getConstants(), playerStatistic);
+
+                    gop_nameTextField.setText("");
+                    gop_statisticsButton.setEnabled(false);
+                }
+
+            }
+        });
+
 
         JButton gop_backToMenuButton = new JButton();
         //Resets the gameScene
@@ -181,6 +210,8 @@ public class GameScreen extends RenderScreen {
 
         gameOverPanel.add(gop_restartButton);
         gameOverPanel.add(Box.createVerticalGlue());
+        gameOverPanel.add(gop_nameTextField);
+        gameOverPanel.add(Box.createVerticalStrut(15));
         gameOverPanel.add(gop_statisticsButton);
         gameOverPanel.add(Box.createVerticalGlue());
         gameOverPanel.add(gop_backToMenuButton);
@@ -222,9 +253,9 @@ public class GameScreen extends RenderScreen {
      */
     public void showGameOverMenu() {
         pausePanel.setVisible(false);
-
-        pausePanel.setVisible(false);
         pbp_pauseButton.setEnabled(false);
+
+        gop_statisticsButton.setEnabled(true);
 
         gameOverPanel.setVisible(true);
     }

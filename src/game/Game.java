@@ -44,6 +44,115 @@ public class Game {
         gameData.changeGameState(gameData.getGameState());
     }
 
+    /**
+     * Used for switching the Screens/Panels corresponding to the TITLE_MAIN GameState
+     */
+    private void titleMain() {
+        gameScreen.stopThread();
+
+        titleScreen.setVisible(true);
+        gameScreen.setVisible(false);
+        statsScreen.setVisible(false);
+
+        titleScreen.setMainPanelVisibility(true);
+        titleScreen.setSettingsPanelVisibility(false);
+
+        titleScreen.setEnabledForMainPanelButtons(true);
+
+        titleScreen.startThread();
+    }
+
+    /**
+     * Used for switching the Screens/Panels corresponding to the TITLE_STATISTICS GameState
+     */
+    private void titleStatistics() {
+        titleScreen.setVisible(true);
+        gameScreen.setVisible(false);
+
+        //Reloading the table Statistics database dataset
+        statsScreen.reloadTable();
+        statsScreen.setVisible(true);
+
+        titleScreen.setMainPanelVisibility(true);
+        titleScreen.setSettingsPanelVisibility(false);
+
+        titleScreen.setEnabledForMainPanelButtons(true);
+
+        titleScreen.startThread();
+    }
+
+    /**
+     * Used for switching the Screens/Panels corresponding to the TITLE_SETTINGS GameState
+     */
+    private void titleSettings() {
+        titleScreen.setVisible(true);
+        gameScreen.setVisible(false);
+        statsScreen.setVisible(false);
+
+        titleScreen.setMainPanelVisibility(true);
+        titleScreen.setSettingsPanelVisibility(true);
+
+        titleScreen.setEnabledForMainPanelButtons(false);
+
+        titleScreen.startThread();
+    }
+
+    /**
+     * Used for switching the Screens/Panels corresponding to the GAME_MAIN GameState
+     */
+    private void gameMain() {
+        titleScreen.stopThread();
+
+        titleScreen.setVisible(false);
+        gameScreen.setVisible(true);
+        statsScreen.setVisible(false);
+
+        gameScreen.showGameplay();
+
+        gameScreen.startThread();
+    }
+
+    /**
+     * Used for switching the Screens/Panels corresponding to the GAME_PAUSE GameState
+     */
+    private void gamePause() {
+        titleScreen.stopThread();
+
+        titleScreen.setVisible(false);
+        gameScreen.setVisible(true);
+        statsScreen.setVisible(false);
+
+        gameScreen.showPauseMenu();
+
+        gameScreen.startThread();
+    }
+
+    /**
+     * Used for switching the Screens/Panels corresponding to the GAME_LOST GameState
+     */
+    private void gameLost() {
+        titleScreen.stopThread();
+
+        titleScreen.setVisible(false);
+        gameScreen.setVisible(true);
+        statsScreen.setVisible(false);
+
+        gameScreen.showGameOverMenu();
+
+        gameScreen.startThread();
+    }
+
+    /**
+     * Used for exiting the Game
+     */
+    private void exit() {
+        titleScreen.dispose();
+        gameScreen.dispose();
+        statsScreen.dispose();
+
+        System.exit(0);
+    }
+
 
     /**
      * Used to apply Screen changes from a gameState change
@@ -55,88 +164,35 @@ public class Game {
             return;
         }
 
-        System.out.println(state);
 
         //State machine
         switch (state) {
             case TITLE_MAIN:
-                gameScreen.stopThread();
-
-                titleScreen.setVisible(true);
-                gameScreen.setVisible(false);
-                statsScreen.setVisible(false);
-
-                titleScreen.setMainPanelVisibility(true);
-                titleScreen.setSettingsPanelVisibility(false);
-
-                titleScreen.setEnabledForMainPanelButtons(true);
-
-                titleScreen.startThread();
+                titleMain();
                 break;
 
             case TITLE_STATISTICS:
-                titleScreen.setVisible(true);
-                gameScreen.setVisible(false);
-                statsScreen.setVisible(true);
-
-                titleScreen.setMainPanelVisibility(true);
-                titleScreen.setSettingsPanelVisibility(false);
-
-                titleScreen.setEnabledForMainPanelButtons(true);
-
-                titleScreen.startThread();
+                titleStatistics();
                 break;
 
             case TITLE_SETTINGS:
-                titleScreen.setVisible(true);
-                gameScreen.setVisible(false);
-                statsScreen.setVisible(false);
-
-                titleScreen.setMainPanelVisibility(true);
-                titleScreen.setSettingsPanelVisibility(true);
-
-                titleScreen.setEnabledForMainPanelButtons(false);
-
-                titleScreen.startThread();
+                titleSettings();
                 break;
 
             case GAME_MAIN:
-                titleScreen.stopThread();
-
-                titleScreen.setVisible(false);
-                gameScreen.setVisible(true);
-                statsScreen.setVisible(false);
-
-                gameScreen.showGameplay();
-
-                gameScreen.startThread();
+                gameMain();
                 break;
 
             case GAME_PAUSE:
-                titleScreen.stopThread();
-
-                titleScreen.setVisible(false);
-                gameScreen.setVisible(true);
-                statsScreen.setVisible(false);
-
-                gameScreen.showPauseMenu();
-
-                gameScreen.startThread();
+                gamePause();
                 break;
 
             case GAME_LOST:
-                titleScreen.stopThread();
-
-                titleScreen.setVisible(false);
-                gameScreen.setVisible(true);
-                statsScreen.setVisible(false);
-
-                gameScreen.showGameOverMenu();
-
-                gameScreen.startThread();
+                gameLost();
                 break;
+
             case EXIT:
-                System.exit(0);
+                exit();
                 break;
         }
     }

@@ -21,8 +21,14 @@ A simple 2D Java game about a monkey catching bananas falling from the sky, with
 
 ## 🎮 Controls
 
+### Keyboard
+
 - **A key:** Moves player left
 - **D key:** Moves player right
+
+### Mouse
+
+- Player moves towards the **cursor**
 
 ## 🧪 Requirements for compilation
 

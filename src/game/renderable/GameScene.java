@@ -104,7 +104,6 @@ public class GameScene implements DrawableAndUpdatable {
 
                 //Create a new Player Statistic to log the current Date and Time
                 player.setPlayerStatistic(new Statistic(gameData.getPlayerScoreData(), gameData.getChosenInputMethod()));
-                System.out.println(player.getPlayerStatistic());
 
                 //Set the GameState to be GameState.GAME_LOST (GameOver)
                 gameData.changeGameState(GameState.GAME_LOST);

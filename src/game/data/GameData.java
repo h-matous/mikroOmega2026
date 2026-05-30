@@ -85,6 +85,7 @@ public class GameData {
         catch (RuntimeException e) {
             //If it is the first time execution new Statistics file will be created
             this.statManager = StatManager.getFirstTimeExecutionInstance();
+
             StatLoader.saveToFile(statManager, gameConstants.getStatManagerFilePath());
         }
 
