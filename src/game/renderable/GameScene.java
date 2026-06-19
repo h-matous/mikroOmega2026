@@ -1,10 +1,12 @@
 package game.renderable;
 
+import game.data.BananaParticleData;
 import game.data.GameState;
 import game.data.statistics.Statistic;
 import game.renderable.background.AnimatedBackground;
 import game.data.GameData;
 import game.renderable.entity.Banana;
+import game.renderable.entity.BananaParticle;
 import game.renderable.entity.Player;
 
 import java.awt.*;
@@ -25,6 +27,8 @@ public class GameScene implements DrawableAndUpdatable {
     private int spawnUpdateCounter;
     private int bananaSpawnDelay;
 
+    private final List<BananaParticle> bananaParticles;
+
     private volatile boolean pendingReset;
 
     /**
@@ -40,6 +44,7 @@ public class GameScene implements DrawableAndUpdatable {
 
         this.bg = new AnimatedBackground(gameData, gameData.getConstants().getAnimatedBackgroundData(), gameData.getGameScreenSize());
 
+        this.bananaParticles = new ArrayList<>();
 
         this.requestReset();
     }
@@ -59,12 +64,15 @@ public class GameScene implements DrawableAndUpdatable {
         this.bananas.clear();
         this.score.reset(gameData.getPlayerScoreData(), gameData.getGameScreenSize());
         this.bg.reset(gameData, gameData.getConstants().getAnimatedBackgroundData(), gameData.getGameScreenSize());
+        this.bananaParticles.clear();
 
-        //Counts how many updates have occured from the last Banana spawn
+        //Counts how many updates have occurred from the last Banana spawn
         this.spawnUpdateCounter = 0;
 
         //Current number of updates (ticks/steps) before spawning a new Banana
         this.bananaSpawnDelay = gameData.calculateCollectableSpawnTickDelay();
+
+        this.pendingReset = false;
     }
 
 
@@ -96,6 +104,16 @@ public class GameScene implements DrawableAndUpdatable {
 
                 //Since the bananaSpawnDelay is based on current Score of the Player it needs to be updated
                 bananaSpawnDelay = gameData.calculateCollectableSpawnTickDelay();
+
+                //Spawning Particles
+                if (!gameData.isParticlesDisabled()) {
+                    BananaParticleData data = gameData.getConstants().getBananaParticleData();
+                    int count = gameData.getRnd().nextIntIncl(data.getMinCount(), data.getMaxCount());
+
+                    for (int j = 0; j < count; j++) {
+                        bananaParticles.add(new BananaParticle(gameData, player));
+                    }
+                }
             }
             //Else if the banana fell off-screen then the game is over
             else if (banana.hasFallenOffScreen(gameData)) {
@@ -121,7 +139,6 @@ public class GameScene implements DrawableAndUpdatable {
     public void update(GameData gameData) {
         if (pendingReset) {
             reset(gameData);
-            this.pendingReset = false;
         }
 
         if (gameData.getKeyHandler().hasEscapePressed()) {
@@ -142,11 +159,24 @@ public class GameScene implements DrawableAndUpdatable {
                 bananas.add(new Banana(gameData));
             }
 
+            if (!gameData.isParticlesDisabled()) {
+                for (BananaParticle bananaParticle : bananaParticles) {
+                    bananaParticle.update(gameData);
+                }
+            }
+
             for (Banana banana : bananas) {
                 banana.update(gameData);
             }
 
             bananaChecking(gameData);
+
+            for (int i = 0; i < bananaParticles.size(); i++) {
+                if (bananaParticles.get(i).hasFallenOffScreen(gameData)) {
+                    bananaParticles.remove(i);
+                    i--;
+                }
+            }
         }
     }
 
@@ -159,6 +189,12 @@ public class GameScene implements DrawableAndUpdatable {
     public void draw(Graphics2D gfx, GameData gameData) {
         this.bg.draw(gfx, gameData);
         this.score.draw(gfx, gameData);
+
+        if (!gameData.isParticlesDisabled()) {
+            for (BananaParticle bananaParticle : bananaParticles) {
+                bananaParticle.draw(gfx, gameData);
+            }
+        }
 
         for (Banana banana : bananas) {
             banana.draw(gfx, gameData);

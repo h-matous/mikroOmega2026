@@ -169,6 +169,9 @@ public class TitleScreen extends RenderScreen {
         JCheckBox sp_checkBox3 = new JCheckBox();
         configJCheckBox(gameData, sp_checkBox3, "Disable banana rotation", x->{gameData.setCollectableRotationDisabled(!gameData.isCollectableRotationDisabled());});
 
+        JCheckBox sp_checkBox4 = new JCheckBox();
+        configJCheckBox(gameData, sp_checkBox4, "Disable particles", x->{gameData.setDisableParticles(!gameData.isParticlesDisabled());});
+
         settingsPanel.add(Box.createVerticalGlue());
         settingsPanel.add(sp_settingsLabel);
         settingsPanel.add(Box.createVerticalStrut(125));
@@ -183,6 +186,8 @@ public class TitleScreen extends RenderScreen {
         settingsPanel.add(sp_checkBox2);
         settingsPanel.add(Box.createVerticalGlue());
         settingsPanel.add(sp_checkBox3);
+        settingsPanel.add(Box.createVerticalGlue());
+        settingsPanel.add(sp_checkBox4);
 
         settingsPanel.add(Box.createVerticalStrut(125));
         settingsPanel.add(sp_settingsBackButton);

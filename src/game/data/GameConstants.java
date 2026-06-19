@@ -66,6 +66,8 @@ public class GameConstants {
     //Spawning data for collectables
     private CollectableSpawningData collectableSpawningData;
 
+    //Data for BananaParticles
+    private BananaParticleData bananaParticleData;
 
     private Color semiTransparentOverlayColor;
 
@@ -166,7 +168,10 @@ public class GameConstants {
         this.playerInitialDirection = Direction.IDLE;
 
         //Collectable spawning data
-        this.collectableSpawningData = new CollectableSpawningData();
+        this.collectableSpawningData = new CollectableSpawningData(20, 200, 25);
+
+        //Data for BananaParticles
+        this.bananaParticleData = new BananaParticleData(3, 5, 12, 16, -5, 5, 1, 50, 2.0f);
 
         //Semi-transparent Color for overlays
         this.semiTransparentOverlayColor = new Color(0, 0, 0, 150);
@@ -361,6 +366,14 @@ public class GameConstants {
      */
     public CollectableSpawningData getCollectableSpawningData() {
         return collectableSpawningData;
+    }
+
+    /**
+     * Used for getting the information about BananaParticles
+     * @return returns the BananaParticle data
+     */
+    public BananaParticleData getBananaParticleData() {
+        return bananaParticleData;
     }
 
     /**

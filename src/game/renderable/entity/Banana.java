@@ -13,12 +13,12 @@ import java.awt.*;
 public class Banana extends Entity {
     private int fallingVel;
 
-    private Texture texture;
+    protected Texture texture;
 
     //Represents how much score should the player receive after collecting this Banana
     private int collectibleScore;
 
-    private int rotationSpeed;
+    protected int rotationSpeed;
 
     /**
      * Constructor sets the default values
@@ -57,6 +57,10 @@ public class Banana extends Entity {
         this.fallingVel = gameData.getCurrentCollectableFallingSpeed();
 
         this.rotation = 0;
+
+        if (!gameData.isCollectableRotationDisabled()) {
+            this.rotation = rotation + gameData.getRnd().nextInt(0, 360);
+        }
 
         this.colliderEnabled = true;
 

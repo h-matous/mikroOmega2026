@@ -49,6 +49,10 @@ public class Vector2d {
         this.y = common;
     }
 
+    public void setBoth(Vector2d value) {
+        this.x = value.x;
+        this.y = value.y;
+    }
 
     public void multiply(double factor) {
         this.x = this.x * factor;
@@ -74,7 +78,7 @@ public class Vector2d {
     }
 
     public void add(Vector2d amount) {
-        add(amount.getX(), amount.getY());
+        add(amount.x, amount.y);
     }
 
     @Override

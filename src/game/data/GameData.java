@@ -3,6 +3,7 @@ package game.data;
 import game.Game;
 import game.data.statistics.StatLoader;
 import game.data.statistics.StatManager;
+import game.utilities.RandomGeneratorEx;
 import game.utilities.input.KeyHandler;
 import game.texture.TextureManager;
 import game.utilities.Vector2d;
@@ -11,7 +12,6 @@ import game.utilities.input.MouseHandler;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.Arrays;
-import java.util.Random;
 
 /**
  * The class GameData is a superset of the class GameConstants, it contains GameConstants and then some attributes that cannot be known before or may be changed during execution
@@ -46,7 +46,7 @@ public class GameData {
     private InputMethod chosenInputMethod;
 
 
-    private final Random rnd;
+    private final RandomGeneratorEx rnd;
 
     private final Font labelFont;
     private final Font scoreFont;
@@ -62,6 +62,7 @@ public class GameData {
     private boolean disableCollectableRotation;
     private boolean disablePlayerAnimation;
     private boolean disableBackgroundAnimation;
+    private boolean disableParticles;
 
     //Shows Entity bounds for debugging purposes
     private boolean showEntityBounds;
@@ -116,7 +117,7 @@ public class GameData {
 
         this.chosenInputMethod = gameConstants.getInitialInputMethod();
 
-        this.rnd = new Random();
+        this.rnd = new RandomGeneratorEx();
 
         this.labelFont = new Font("Arial", Font.BOLD, titleScreenSize.width / 30);
         this.scoreFont = new Font("Arial", Font.BOLD, gameScreenSize.width / 12);
@@ -131,6 +132,7 @@ public class GameData {
         this.disableCollectableRotation = false;
         this.disablePlayerAnimation = false;
         this.disableBackgroundAnimation = false;
+        this.disableParticles = false;
 
         this.showEntityBounds = false;
     }
@@ -293,10 +295,10 @@ public class GameData {
     }
 
     /**
-     * Used for getting the Random instance
-     * @return returns the random generator as Random
+     * Used for getting the RandomGeneratorEx instance
+     * @return returns the random generator as RandomGeneratorEx
      */
-    public Random getRnd() {
+    public RandomGeneratorEx getRnd() {
         return rnd;
     }
 
@@ -405,6 +407,22 @@ public class GameData {
      */
     public void setDisableBackgroundAnimation(boolean disableBackgroundAnimation) {
         this.disableBackgroundAnimation = disableBackgroundAnimation;
+    }
+
+    /**
+     * Used for checking if the Particle spawning is disabled, disabling it could yield in better performance
+     * @return returns the boolean if the Particles are disabled
+     */
+    public boolean isParticlesDisabled() {
+        return disableParticles;
+    }
+
+    /**
+     * Used for setting if the Particles are disabled, disabling it could yield in better performance
+     * @param disableParticles the new value as a boolean
+     */
+    public void setDisableParticles(boolean disableParticles) {
+        this.disableParticles = disableParticles;
     }
 
     /**

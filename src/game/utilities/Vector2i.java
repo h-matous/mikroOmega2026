@@ -10,8 +10,8 @@ public class Vector2i {
     }
 
     public Vector2i(Vector2i vec) {
-        this.x = vec.x;
-        this.y = vec.y;
+            this.x = vec.x;
+            this.y = vec.y;
     }
 
     public Vector2i(int common) {
@@ -49,6 +49,11 @@ public class Vector2i {
         this.y = common;
     }
 
+    public void setBoth(Vector2i value) {
+        this.x = value.x;
+        this.y = value.y;
+    }
+
 
     public void multiply(double factor) {
         this.x = (int) (this.x * factor);
@@ -74,7 +79,7 @@ public class Vector2i {
     }
 
     public void add(Vector2i amount) {
-        add(amount.getX(), amount.getY());
+        add(amount.x, amount.y);
     }
 
     @Override

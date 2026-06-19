@@ -48,8 +48,14 @@ public class Player extends Entity {
     public void reset(GameData gameData) {
         this.collider = gameData.getConstants().getCollider("player");
 
+        this.direction = gameData.getConstants().getPlayerInitialDirection();
+
+        this.currentAnimation = animationMap.get(direction);
+
+        currentAnimation.resetCurrentFrameCounter();
+
         this.scale = gameData.getScale();
-        this.size.setBoth(currentAnimation.getCurrentFrame().getWidth());
+        this.size.setBoth(currentAnimation.getCurrentFrame().getWidth(), currentAnimation.getCurrentFrame().getHeight());
         this.pos.setBoth((int) (gameData.getGameScreenSize().width / 2.0 - this.size.getX() * this.scale / 2.0), (int) (gameData.getGameScreenSize().height - this.size.getY() * this.scale - gameData.playerPxOffGameScreenGround()));
 
         this.vel.setBoth(0);
@@ -79,10 +85,6 @@ public class Player extends Entity {
 
             animationMap.put(direction, new Animation(texMngr.getTexture(animationData.getTextureId()), animationData.getFrameCount(), animationData.getTargetAnimFPS(), targetUPS));
         }
-
-        this.direction = gameData.getConstants().getPlayerInitialDirection();
-
-        this.currentAnimation = animationMap.get(direction);
     }
 
     /**

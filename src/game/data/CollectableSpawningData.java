@@ -3,7 +3,7 @@ package game.data;
 /**
  * The <strong>CollectableSpawningData</strong> is responsible for holding the information for spawning collectables
  * <br><br>
- * <strong>minSpawnUpdateDelay</strong> the minimum amount updates that must pass before spawning a new collectable
+ * <strong>minSpawnUpdateDelay</strong> the minimum amount of updates that must pass before spawning a new collectable
  * <br>
  * <strong>baseSpawnUpdateDelay</strong> the starting number of updates between spawns, before any Score scaling is applied
  * <br>
@@ -13,7 +13,7 @@ public class CollectableSpawningData {
     private final int minSpawnUpdateDelay;
     private final int baseSpawnUpdateDelay;
 
-    private final double collectableSpawnCoefficitent;
+    private final double collectableSpawnCoefficient;
 
     /**
      * Default constructor sets default values
@@ -22,7 +22,19 @@ public class CollectableSpawningData {
         this.minSpawnUpdateDelay = 20; //1/5 of a second
         this.baseSpawnUpdateDelay = 200; //2 seconds
 
-        this.collectableSpawnCoefficitent = 25.0;
+        this.collectableSpawnCoefficient = 25.0;
+    }
+
+    /**
+     * Fully parametric constructor
+     * @param minSpawnUpdateDelay minimum amount of updates that must pass before spawning a new collectable
+     * @param baseSpawnUpdateDelay starting number of updates between spawns, before any Score scaling is applied
+     * @param collectableSpawnCoefficient steepnes of the logarithmic curve to the base of e, higher value represents smaller delay (higher difficulty) in between spawns over time
+     */
+    public CollectableSpawningData(int minSpawnUpdateDelay, int baseSpawnUpdateDelay, double collectableSpawnCoefficient) {
+        this.minSpawnUpdateDelay = minSpawnUpdateDelay;
+        this.baseSpawnUpdateDelay = baseSpawnUpdateDelay;
+        this.collectableSpawnCoefficient = collectableSpawnCoefficient;
     }
 
     /**
@@ -47,6 +59,6 @@ public class CollectableSpawningData {
      * @return double representing the coefficient
      */
     public double getCollectableSpawnCoefficient() {
-        return collectableSpawnCoefficitent;
+        return collectableSpawnCoefficient;
     }
 }

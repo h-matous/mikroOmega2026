@@ -60,6 +60,7 @@ public class GameScreen extends RenderScreen {
     //Needs to be on the class scope so it can be disabled later
     JButton pbp_pauseButton;
 
+    JTextField gop_nameTextField;
     JButton gop_statisticsButton;
     /**
      * Constructor sets the values
@@ -174,8 +175,8 @@ public class GameScreen extends RenderScreen {
         //Resets the gameScene
         configJButton(gameData, gop_restartButton, "Restart", x->{gameScene.requestReset();gameData.changeGameState(GameState.GAME_MAIN);});
 
-        JTextField gop_nameTextField = new JTextField(20);
-        configJTextField(gameData, gop_nameTextField, "", x->{});
+        gop_nameTextField = new JTextField(20);
+        configJTextField(gameData, gop_nameTextField, "Enter your name", x->{});
         gop_nameTextField.setMaximumSize(gop_nameTextField.getPreferredSize());
 
         gop_statisticsButton = new JButton();
@@ -255,6 +256,7 @@ public class GameScreen extends RenderScreen {
         pausePanel.setVisible(false);
         pbp_pauseButton.setEnabled(false);
 
+        gop_nameTextField.setText("Enter your name");
         gop_statisticsButton.setEnabled(true);
 
         gameOverPanel.setVisible(true);
